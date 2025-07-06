@@ -160,6 +160,38 @@ const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export function GameProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(gameReducer, initialState);
+  const [channel] = React.useState(() => new BroadcastChannel('basketball-scoreboard'));
+  const isController = React.useMemo(() => window.location.pathname === '/', []);
+
+  // Enhanced dispatch that broadcasts to other windows
+  const enhancedDispatch = React.useCallback((action: GameAction) => {
+    dispatch(action);
+    // Broadcast action to other windows
+    channel.postMessage({ type: 'GAME_ACTION', action });
+    console.log('Broadcasting action:', action);
+  }, [channel]);
+
+  // Listen for actions from other windows
+  React.useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.data.type === 'GAME_ACTION') {
+        console.log('Received action from other window:', event.data.action);
+        dispatch(event.data.action);
+      }
+    };
+
+    channel.addEventListener('message', handleMessage);
+    return () => {
+      channel.removeEventListener('message', handleMessage);
+    };
+  }, [channel]);
+
+  // Cleanup channel on unmount
+  React.useEffect(() => {
+    return () => {
+      channel.close();
+    };
+  }, [channel]);
 
   const formatGameClock = () => {
     const minutes = state.gameClockMinutes.toString().padStart(2, '0');
@@ -171,26 +203,26 @@ export function GameProvider({ children }: { children: ReactNode }) {
     return state.shotClockSeconds.toString().padStart(2, '0');
   };
 
-  // Clock tick effects
+  // Clock tick effects - only run in controller window
   React.useEffect(() => {
-    if (!state.gameClockRunning) return;
+    if (!isController || !state.gameClockRunning) return;
     
     const timer = setInterval(() => {
-      dispatch({ type: 'TICK_GAME_CLOCK' });
+      enhancedDispatch({ type: 'TICK_GAME_CLOCK' });
     }, 1000);
     
     return () => clearInterval(timer);
-  }, [state.gameClockRunning]);
+  }, [isController, state.gameClockRunning, enhancedDispatch]);
 
   React.useEffect(() => {
-    if (!state.shotClockRunning) return;
+    if (!isController || !state.shotClockRunning) return;
     
     const timer = setInterval(() => {
-      dispatch({ type: 'TICK_SHOT_CLOCK' });
+      enhancedDispatch({ type: 'TICK_SHOT_CLOCK' });
     }, 1000);
     
     return () => clearInterval(timer);
-  }, [state.shotClockRunning]);
+  }, [isController, state.shotClockRunning, enhancedDispatch]);
 
   // Buzzer effects
   React.useEffect(() => {
@@ -208,7 +240,7 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }, [state.shotClockSeconds, state.shotBuzzerEnabled]);
 
   return (
-    <GameContext.Provider value={{ state, dispatch, formatGameClock, formatShotClock }}>
+    <GameContext.Provider value={{ state, dispatch: enhancedDispatch, formatGameClock, formatShotClock }}>
       {children}
     </GameContext.Provider>
   );
