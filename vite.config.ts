@@ -20,3 +20,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
 }));
+export default defineConfig(({ mode }) => ({
+  base: '/your-repo-name/', // Add this line with your actual repo name
+  // ... rest of existing config
+}));
