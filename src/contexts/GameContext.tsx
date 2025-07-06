@@ -165,23 +165,31 @@ export function GameProvider({ children }: { children: ReactNode }) {
 
   // Enhanced dispatch that broadcasts to other windows
   const enhancedDispatch = React.useCallback((action: GameAction) => {
+    console.log('🎮 Dispatching action:', action, 'from path:', window.location.pathname);
     dispatch(action);
     // Broadcast action to other windows
-    channel.postMessage({ type: 'GAME_ACTION', action });
-    console.log('Broadcasting action:', action);
+    try {
+      channel.postMessage({ type: 'GAME_ACTION', action });
+      console.log('📡 Successfully broadcast action to other windows');
+    } catch (error) {
+      console.error('❌ Failed to broadcast action:', error);
+    }
   }, [channel]);
 
   // Listen for actions from other windows
   React.useEffect(() => {
+    console.log('🔗 Setting up BroadcastChannel listener for basketball-scoreboard');
+    
     const handleMessage = (event: MessageEvent) => {
       if (event.data.type === 'GAME_ACTION') {
-        console.log('Received action from other window:', event.data.action);
+        console.log('📥 Received action from other window:', event.data.action);
         dispatch(event.data.action);
       }
     };
 
     channel.addEventListener('message', handleMessage);
     return () => {
+      console.log('🔌 Cleaning up BroadcastChannel listener');
       channel.removeEventListener('message', handleMessage);
     };
   }, [channel]);
