@@ -11,7 +11,7 @@ export function ControllerView() {
   const awayLogoInputRef = useRef<HTMLInputElement>(null);
 
   const openScoreboard = () => {
-    const url = `${window.location.origin}${window.location.pathname}#/scoreboard`;
+    const url = `${window.location.origin}/scoreboard`;
     window.open(url, '_blank', 'fullscreen=yes,menubar=no,toolbar=no,location=no,status=no');
   };
 
