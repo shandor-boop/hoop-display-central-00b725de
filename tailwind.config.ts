@@ -26,7 +26,8 @@ export default {
 				foreground: 'hsl(var(--foreground))',
 				primary: {
 					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					foreground: 'hsl(var(--primary-foreground))',
+					glow: 'hsl(var(--primary-glow))'
 				},
 				secondary: {
 					DEFAULT: 'hsl(var(--secondary))',
@@ -52,6 +53,18 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// Basketball-specific colors
+				court: {
+					wood: 'hsl(var(--court-wood))',
+					lines: 'hsl(var(--court-lines))'
+				},
+				led: {
+					green: 'hsl(var(--led-green))',
+					red: 'hsl(var(--led-red))'
+				},
+				scoreboard: {
+					frame: 'hsl(var(--scoreboard-frame))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
@@ -62,6 +75,14 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				}
+			},
+			backgroundImage: {
+				'gradient-scoreboard': 'var(--gradient-scoreboard)',
+				'gradient-glow': 'var(--gradient-glow)'
+			},
+			fontFamily: {
+				'scoreboard': 'var(--font-scoreboard)',
+				'clock': 'var(--font-clock)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

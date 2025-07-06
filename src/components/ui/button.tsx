@@ -9,7 +9,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 glow-effect",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
@@ -18,6 +18,12 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        // Basketball-specific variants
+        scoreboard: "bg-muted/80 backdrop-blur-sm text-foreground hover:bg-muted hover:text-primary border border-border",
+        control: "bg-card/80 backdrop-blur-sm text-foreground hover:bg-primary hover:text-primary-foreground border border-border glow-effect",
+        score: "bg-primary text-primary-foreground hover:bg-primary-glow font-bold text-lg px-6 py-3 glow-effect",
+        timeout: "bg-led-red text-white hover:bg-led-red/80 font-semibold",
+        possession: "bg-led-green text-white hover:bg-led-green/80 font-semibold",
       },
       size: {
         default: "h-10 px-4 py-2",
