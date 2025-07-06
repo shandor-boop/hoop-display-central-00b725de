@@ -131,10 +131,6 @@
     @apply bg-gradient-to-br from-card to-scoreboard-frame;
     box-shadow: var(--shadow-scoreboard);
     border: 2px solid hsl(var(--border));
-    background-image: url('/src/assets/basketball-court-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    background-blend-mode: overlay;
   }
 
   .led-display {
