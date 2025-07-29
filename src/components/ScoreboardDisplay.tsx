@@ -58,11 +58,11 @@ export function ScoreboardDisplay() {
             
               </div>
             </div>
-          </div>
+    
 
           {/* Center Clock Section */}
           <div className="text-center space-y-6">
-            {/* Game Clock */}
+    
             <div className="led-display rounded-xl p-6">
               <div className="text-lg text-muted-foreground mb-2">PERIOD {state.period}</div>
               <div className="text-6xl font-black clock-font text-center text-foreground">
@@ -96,29 +96,25 @@ export function ScoreboardDisplay() {
                 border-t-transparent border-b-transparent transition-all duration-300 ${
                 state.possession === 'home' 
                   ? 'border-l-primary opacity-100' 
-                  : 'border-l-muted-foreground/30 opacity-30'
-              }`} />
-            </div>
-          </div>
-
-          {/* Home Team */}
-          <div className="text-center">
-            <div className="mb-4">
-              {state.home.logo && (
-                <img
-                  src={state.home.logo}
-                  alt={`${state.home.name} logo`}
-                  className="w-24 h-24 mx-auto mb-4 object-contain"
-                />
-              )}
-              <h2 className="text-3xl font-bold text-foreground">{state.home.name}</h2>
-            </div>
-            <div className="led-display rounded-xl p-6">
-              <div className="text-8xl font-black clock-font text-center text-foreground">
-                {state.home.score}
-              </div>
-            </div>
-            <div className="mt-4 text-center"></div>
+        {/* Home Team */}
+<div className="text-center">
+  <div className="mb-4">
+    {state.home.logo && (
+ <img
+        src={state.home.logo}
+        alt={`${state.home.name} logo`}
+        className="w-24 h-24 mx-auto mb-4 object-contain"
+      />
+    )}
+  </div>
+  <h2 className="text-3xl font-bold text-foreground">{state.home.name}</h2>
+  <div  className="led-display rounded-xl p-6"
+    <div className="text-8xl font-black clock-font text-center text-foreground">
+      {state.home.score}
+    </div>
+  </div>
+  <div className="mt-4 text-center"></div>
+</div>
               
 
         {/* Bottom Instructions */}
