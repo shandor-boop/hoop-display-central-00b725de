@@ -54,7 +54,8 @@ export function ScoreboardDisplay() {
               <div className="text-8xl font-black clock-font text-center text-foreground">
                 {state.away.score}
               </div>
-            </<div className="mt-4 text-center"</div>
+       <div className="mt-4 text-center"></div>
+            
               </div>
             </div>
           </div>
