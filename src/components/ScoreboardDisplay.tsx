@@ -54,11 +54,7 @@ export function ScoreboardDisplay() {
               <div className="text-8xl font-black clock-font text-center text-foreground">
                 {state.away.score}
               </div>
-            </div>
-            <div className="mt-4 text-center">
-              <div className="text-lg text-muted-foreground mb-2">FOULS: {state.away.fouls}</div>
-              <div className="flex justify-center gap-1">
-                {renderTimeoutDots(state.away.timeouts)}
+            </<div className="mt-4 text-center"</div>
               </div>
             </div>
           </div>
@@ -121,14 +117,8 @@ export function ScoreboardDisplay() {
                 {state.home.score}
               </div>
             </div>
-            <div className="mt-4 text-center">
-              <div className="text-lg text-muted-foreground mb-2">FOULS: {state.home.fouls}</div>
-              <div className="flex justify-center gap-1">
-                {renderTimeoutDots(state.home.timeouts)}
-              </div>
-            </div>
-          </div>
-        </div>
+            <div className="mt-4 text-center"></div>
+              
 
         {/* Bottom Instructions */}
         <div className="text-center text-muted-foreground/60 text-sm">
