@@ -57,10 +57,10 @@
   }
 
   .clock-font {
-    font-family: 'Orbitron', 'Courier New', 'Courier', 'Lucida Console', monospace;
+    font-family: 'Kode Mono', 'Courier New', 'Courier', 'Lucida Console', monospace;
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.1em;
-    font-weight: 900;
+    font-weight: 700;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
   }
