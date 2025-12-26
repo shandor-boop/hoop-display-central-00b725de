@@ -32,16 +32,14 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('hoop-display-central-00b725de/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
       
       - name: Install dependencies
-        working-directory: ./hoop-display-central-00b725de
         run: npm ci
       
       - name: Build
-        working-directory: ./hoop-display-central-00b725de
         run: npm run build
       
       - name: Setup Pages
@@ -50,7 +48,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './hoop-display-central-00b725de/dist'
+          path: './dist'
 
   deploy:
     environment:
