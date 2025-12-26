@@ -38,6 +38,32 @@ type GameAction =
   | { type: 'TICK_GAME_CLOCK' }
   | { type: 'TICK_SHOT_CLOCK' };
 
+const STORAGE_KEY = 'basketball-scoreboard-state';
+
+function loadStateFromStorage(): GameState | null {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      // Validate the stored state has all required fields
+      if (parsed && parsed.home && parsed.away) {
+        return parsed as GameState;
+      }
+    }
+  } catch (error) {
+    console.error('Failed to load state from localStorage:', error);
+  }
+  return null;
+}
+
+function saveStateToStorage(state: GameState) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (error) {
+    console.error('Failed to save state to localStorage:', error);
+  }
+}
+
 const initialState: GameState = {
   home: { name: 'HOME', score: 0, fouls: 0, timeouts: 5, logo: undefined },
   away: { name: 'AWAY', score: 0, fouls: 0, timeouts: 5, logo: undefined },
@@ -159,25 +185,45 @@ interface GameContextType {
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export function GameProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(gameReducer, initialState);
-  const [channel] = React.useState(() => new BroadcastChannel('basketball-scoreboard'));
+  // Load initial state from localStorage or use default
+  const [state, dispatch] = useReducer(
+    gameReducer,
+    loadStateFromStorage() || initialState
+  );
+  const [channel] = React.useState(() => {
+    try {
+      return new BroadcastChannel('basketball-scoreboard');
+    } catch (error) {
+      console.error('Failed to create BroadcastChannel:', error);
+      return null;
+    }
+  });
   const isController = React.useMemo(() => window.location.pathname === '/', []);
+
+  // Save state to localStorage whenever it changes
+  React.useEffect(() => {
+    saveStateToStorage(state);
+  }, [state]);
 
   // Enhanced dispatch that broadcasts to other windows
   const enhancedDispatch = React.useCallback((action: GameAction) => {
     console.log('🎮 Dispatching action:', action, 'from path:', window.location.pathname);
     dispatch(action);
     // Broadcast action to other windows
-    try {
-      channel.postMessage({ type: 'GAME_ACTION', action });
-      console.log('📡 Successfully broadcast action to other windows');
-    } catch (error) {
-      console.error('❌ Failed to broadcast action:', error);
+    if (channel) {
+      try {
+        channel.postMessage({ type: 'GAME_ACTION', action });
+        console.log('📡 Successfully broadcast action to other windows');
+      } catch (error) {
+        console.error('❌ Failed to broadcast action:', error);
+      }
     }
   }, [channel]);
 
   // Listen for actions from other windows
   React.useEffect(() => {
+    if (!channel) return;
+    
     console.log('🔗 Setting up BroadcastChannel listener for basketball-scoreboard');
     
     const handleMessage = (event: MessageEvent) => {
@@ -197,7 +243,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
   // Cleanup channel on unmount
   React.useEffect(() => {
     return () => {
-      channel.close();
+      if (channel) {
+        channel.close();
+      }
     };
   }, [channel]);
 

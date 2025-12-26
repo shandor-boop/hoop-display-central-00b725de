@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useGame } from '@/contexts/GameContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -11,9 +11,85 @@ export function ControllerView() {
   const awayLogoInputRef = useRef<HTMLInputElement>(null);
 
   const openScoreboard = () => {
-    const url = `${window.location.origin}/scoreboard`;
+    const basePath = import.meta.env.BASE_URL.replace(/\/$/, '');
+    const url = `${window.location.origin}${basePath}/scoreboard`;
     window.open(url, '_blank', 'fullscreen=yes,menubar=no,toolbar=no,location=no,status=no');
   };
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      // Ignore if typing in an input field
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      switch (e.key.toLowerCase()) {
+        case ' ':
+          e.preventDefault();
+          // Toggle game clock
+          dispatch({ 
+            type: state.gameClockRunning ? 'STOP_GAME_CLOCK' : 'START_GAME_CLOCK' 
+          });
+          break;
+        case 's':
+          e.preventDefault();
+          // Toggle shot clock
+          dispatch({ 
+            type: state.shotClockRunning ? 'STOP_SHOT_CLOCK' : 'START_SHOT_CLOCK' 
+          });
+          break;
+        case 'r':
+          e.preventDefault();
+          // Reset shot clock to 24
+          dispatch({ type: 'RESET_SHOT_CLOCK', seconds: 24 });
+          break;
+        case 'p':
+          e.preventDefault();
+          // Toggle possession
+          dispatch({ type: 'TOGGLE_POSSESSION' });
+          break;
+        case '1':
+          e.preventDefault();
+          // Home team +1
+          dispatch({ type: 'UPDATE_SCORE', team: 'home', points: 1 });
+          break;
+        case '2':
+          e.preventDefault();
+          // Home team +2
+          dispatch({ type: 'UPDATE_SCORE', team: 'home', points: 2 });
+          break;
+        case '3':
+          e.preventDefault();
+          // Home team +3
+          dispatch({ type: 'UPDATE_SCORE', team: 'home', points: 3 });
+          break;
+        case 'q':
+          e.preventDefault();
+          // Away team +1
+          dispatch({ type: 'UPDATE_SCORE', team: 'away', points: 1 });
+          break;
+        case 'w':
+          e.preventDefault();
+          // Away team +2
+          dispatch({ type: 'UPDATE_SCORE', team: 'away', points: 2 });
+          break;
+        case 'e':
+          e.preventDefault();
+          // Away team +3
+          dispatch({ type: 'UPDATE_SCORE', team: 'away', points: 3 });
+          break;
+        case 'o':
+          e.preventDefault();
+          // Open scoreboard
+          openScoreboard();
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [state.gameClockRunning, state.shotClockRunning, dispatch]);
 
   const handleLogoUpload = (team: 'home' | 'away', file: File) => {
     const reader = new FileReader();
@@ -46,16 +122,22 @@ export function ControllerView() {
     <div className="min-h-screen bg-gradient-to-br from-background via-card to-scoreboard-frame p-3">
       <div className="max-w-7xl mx-auto space-y-3">
         {/* Header */}
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-foreground">Basketball Scoreboard Controller</h1>
-          <Button onClick={openScoreboard} variant="score" className="gap-2 h-9 px-4 text-sm">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground">Basketball Scoreboard Controller</h1>
+            <p className="text-xs text-muted-foreground mt-1">
+              Keyboard shortcuts: Space (game clock), S (shot clock), R (reset shot), P (possession), 
+              1/2/3 (home score), Q/W/E (away score), O (open scoreboard)
+            </p>
+          </div>
+          <Button onClick={openScoreboard} variant="score" className="gap-2 h-9 px-4 text-sm w-full sm:w-auto">
             <ExternalLink className="w-4 h-4" />
             Open Scoreboard
           </Button>
         </div>
 
         {/* Clock Controls */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Game Clock */}
           <Card className="scoreboard-display">
             <CardHeader className="pb-2">
@@ -218,7 +300,7 @@ export function ControllerView() {
         </div>
 
         {/* Team Management */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {/* Away Team */}
           <Card className="scoreboard-display">
             <CardHeader className="pb-2">
