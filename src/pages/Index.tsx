@@ -1,7 +1,7 @@
-import { ControllerView } from '@/components/ControllerView';
+import { UnifiedScoreboard } from '@/components/UnifiedScoreboard';
 
 const Index = () => {
-  return <ControllerView />;
+  return <UnifiedScoreboard />;
 };
 
 export default Index;

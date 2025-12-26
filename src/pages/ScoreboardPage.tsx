@@ -1,7 +1,7 @@
-import { ScoreboardDisplay } from '@/components/ScoreboardDisplay';
+import { UnifiedScoreboard } from '@/components/UnifiedScoreboard';
 
 const ScoreboardPage = () => {
-  return <ScoreboardDisplay />;
+  return <UnifiedScoreboard />;
 };
 
 export default ScoreboardPage;
