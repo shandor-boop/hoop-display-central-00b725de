@@ -1,0 +1,537 @@
+import { useEffect, useState, useRef } from 'react';
+import { useGameState } from '../hooks/useGameState';
+import { Button } from './Button';
+import { playGameClockBuzzer, playShotClockBuzzer } from '../utils/buzzer';
+
+export function Scoreboard() {
+  const {
+    state,
+    updateState,
+    updateTeam,
+    adjustScore,
+    adjustGameClock,
+    formatGameClock,
+    formatShotClock,
+  } = useGameState();
+
+  const [gameClockBuzzerText, setGameClockBuzzerText] = useState('🔊 Test');
+  const [shotClockBuzzerText, setShotClockBuzzerText] = useState('🔊 Test');
+  const gameClockBuzzerTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const shotClockBuzzerTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const gameClockBuzzerClickedRef = useRef(false);
+  const shotClockBuzzerClickedRef = useRef(false);
+
+  // Fullscreen toggle
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.key === 'f' || e.key === 'F') {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen();
+        } else {
+          document.exitFullscreen();
+        }
+      }
+    };
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, []);
+
+  const handleGameClockBuzzer = () => {
+    if (!gameClockBuzzerClickedRef.current) {
+      // First click - show "Sure?"
+      gameClockBuzzerClickedRef.current = true;
+      setGameClockBuzzerText('Sure?');
+      
+      // Clear any existing timeout
+      if (gameClockBuzzerTimeoutRef.current) {
+        clearTimeout(gameClockBuzzerTimeoutRef.current);
+      }
+      
+      // Set timeout to revert after 3 seconds
+      gameClockBuzzerTimeoutRef.current = setTimeout(() => {
+        setGameClockBuzzerText('🔊 Test');
+        gameClockBuzzerClickedRef.current = false;
+      }, 3000);
+    } else {
+      // Second click - play sound
+      playGameClockBuzzer();
+      setGameClockBuzzerText('🔊 Test');
+      gameClockBuzzerClickedRef.current = false;
+      
+      // Clear timeout
+      if (gameClockBuzzerTimeoutRef.current) {
+        clearTimeout(gameClockBuzzerTimeoutRef.current);
+      }
+    }
+  };
+
+  const handleShotClockBuzzer = () => {
+    if (!shotClockBuzzerClickedRef.current) {
+      // First click - show "Sure?"
+      shotClockBuzzerClickedRef.current = true;
+      setShotClockBuzzerText('Sure?');
+      
+      // Clear any existing timeout
+      if (shotClockBuzzerTimeoutRef.current) {
+        clearTimeout(shotClockBuzzerTimeoutRef.current);
+      }
+      
+      // Set timeout to revert after 3 seconds
+      shotClockBuzzerTimeoutRef.current = setTimeout(() => {
+        setShotClockBuzzerText('🔊 Test');
+        shotClockBuzzerClickedRef.current = false;
+      }, 3000);
+    } else {
+      // Second click - play sound
+      playShotClockBuzzer();
+      setShotClockBuzzerText('🔊 Test');
+      shotClockBuzzerClickedRef.current = false;
+      
+      // Clear timeout
+      if (shotClockBuzzerTimeoutRef.current) {
+        clearTimeout(shotClockBuzzerTimeoutRef.current);
+      }
+    }
+  };
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (gameClockBuzzerTimeoutRef.current) {
+        clearTimeout(gameClockBuzzerTimeoutRef.current);
+      }
+      if (shotClockBuzzerTimeoutRef.current) {
+        clearTimeout(shotClockBuzzerTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const adjustFouls = (team: 'home' | 'away', change: number) => {
+    const newFouls = Math.max(0, state[team].fouls + change);
+    updateTeam(team, { fouls: newFouls });
+  };
+
+  const adjustTimeouts = (team: 'home' | 'away', change: number) => {
+    const newTimeouts = Math.max(0, Math.min(5, state[team].timeouts + change));
+    updateTeam(team, { timeouts: newTimeouts });
+  };
+
+  const adjustPeriod = (change: number) => {
+    const newPeriod = Math.max(1, Math.min(4, state.period + change));
+    updateState({ period: newPeriod });
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-7xl border-4 border-white rounded-lg p-4" style={{ backgroundColor: '#141414' }}>
+        {/* Top Section: Clock */}
+        <div className="grid grid-cols-3 gap-4 mb-6 items-center">
+          {/* Left: Empty for spacing */}
+          <div></div>
+
+          {/* Center: Game Clock */}
+          <div className="flex flex-col items-center justify-center">
+            <div className="border-2 border-white bg-black px-6 py-3 mb-2 w-[420px]">
+              <div className="text-6xl sm:text-8xl font-black clock-font text-yellow-500 text-center">
+                {formatGameClock()}
+              </div>
+            </div>
+            <div className="flex items-center justify-center gap-4 mt-2">
+              <div className="flex flex-col items-center gap-1">
+                <label className="text-xs text-white uppercase font-bold">Minutes</label>
+                <div className="flex gap-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => adjustGameClock(1, 0)}
+                    className="h-8 w-8 p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                    title="Increase minutes"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                      <path d="M18 15l-6-6-6 6"/>
+                    </svg>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => adjustGameClock(-1, 0)}
+                    className="h-8 w-8 p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                    title="Decrease minutes"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                      <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                  </Button>
+                </div>
+              </div>
+              <div className="flex flex-col items-center gap-1">
+                <label className="text-xs text-white uppercase font-bold">Seconds</label>
+                <div className="flex gap-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => adjustGameClock(0, 1)}
+                    className="h-8 w-8 p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                    title="Increase seconds"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                      <path d="M18 15l-6-6-6 6"/>
+                    </svg>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => adjustGameClock(0, -1)}
+                    className="h-8 w-8 p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                    title="Decrease seconds"
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                      <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center justify-center gap-2 mt-2">
+              <Button
+                variant={state.gameClockRunning ? 'destructive' : 'default'}
+                size="sm"
+                onClick={() => updateState({ gameClockRunning: !state.gameClockRunning })}
+                className="px-3 py-1 text-xs focus:outline-none"
+              >
+                {state.gameClockRunning ? '⏸ Stop' : '▶ Start'}
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleGameClockBuzzer}
+                className="text-xs px-3 py-1 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                title="Test buzzer"
+              >
+                {gameClockBuzzerText}
+              </Button>
+            </div>
+          </div>
+
+          {/* Right: Empty for spacing */}
+          <div></div>
+        </div>
+
+        {/* Middle Section: Scores, Fouls, Period */}
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          {/* Left: Home Score and Fouls */}
+          <div className="text-center flex flex-col items-center">
+            <input
+              type="text"
+              value={state.home.name}
+              onChange={(e) => updateTeam('home', { name: e.target.value })}
+              className="text-2xl sm:text-3xl font-bold text-white bg-transparent border-none text-center focus:outline-none focus:ring-2 focus:ring-yellow-500 rounded px-2 cursor-text uppercase mb-2"
+              style={{ backgroundColor: '#141414' }}
+              placeholder="HOME"
+            />
+            <div className="border-2 border-white bg-black px-4 py-3 mb-4 w-[280px]">
+              <div className="text-6xl sm:text-8xl font-black clock-font text-red-500 text-center">
+                {state.home.score}
+              </div>
+            </div>
+            <div className="flex justify-center gap-2 mb-4">
+              <Button variant="outline" size="sm" onClick={() => adjustScore('home', 1)} className="text-white border-white hover:bg-white hover:text-black focus:outline-none">
+                +1
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => adjustScore('home', 2)} className="text-white border-white hover:bg-white hover:text-black focus:outline-none">
+                +2
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => adjustScore('home', 3)} className="text-white border-white hover:bg-white hover:text-black focus:outline-none">
+                +3
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => adjustScore('home', -1)} className="text-white border-white hover:bg-white hover:text-black focus:outline-none">
+                -1
+              </Button>
+            </div>
+            <div className="mb-2">
+              <div className="text-sm text-white mb-1 uppercase font-bold">FOULS</div>
+              <div className="inline-flex items-center justify-center">
+                <div className="bg-black border-2 border-white text-orange-500 text-2xl font-black clock-font px-4 py-2 w-[60px] text-center">
+                  {state.home.fouls}
+                </div>
+                <div className="flex flex-col ml-2 gap-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => adjustFouls('home', 1)}
+                    className="h-6 w-6 p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                  >
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                      <path d="M18 15l-6-6-6 6"/>
+                    </svg>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => adjustFouls('home', -1)}
+                    className="h-6 w-6 p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                  >
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                      <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <div className="mt-2">
+              <div className="text-xs text-white mb-1 font-bold">Timeouts: {state.home.timeouts}</div>
+              <div className="flex gap-1 justify-center">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => adjustTimeouts('home', -1)}
+                  className="h-6 w-6 p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                >
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <path d="M6 9l6 6 6-6"/>
+                  </svg>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => adjustTimeouts('home', 1)}
+                  className="h-6 w-6 p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                >
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <path d="M18 15l-6-6-6 6"/>
+                  </svg>
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Center: Period and Shot Clock */}
+          <div className="text-center">
+            <div className="mb-4">
+              <div className="text-sm text-white mb-1 uppercase font-bold">PERIOD</div>
+              <div className="inline-block border-2 border-white bg-black px-6 py-4 mb-2 w-[120px]">
+                <div className="text-6xl sm:text-8xl font-black clock-font text-yellow-500 text-center">
+                  {state.period}
+                </div>
+              </div>
+              <div className="flex items-center justify-center gap-1 mt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => adjustPeriod(-1)}
+                  className="h-8 w-8 p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <path d="M6 9l6 6 6-6"/>
+                  </svg>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => adjustPeriod(1)}
+                  className="h-8 w-8 p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <path d="M18 15l-6-6-6 6"/>
+                  </svg>
+                </Button>
+              </div>
+            </div>
+            <div className="mb-4">
+              <div className="text-xs text-white mb-2 uppercase font-bold">Shot Clock</div>
+              <div className="inline-block border-2 border-white bg-black px-4 py-2 mb-2 w-[140px]">
+                <div className="text-4xl font-black clock-font text-yellow-500 text-center">
+                  {formatShotClock()}
+                </div>
+              </div>
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <div className="flex flex-col items-center gap-1">
+                  <label className="text-xs text-white uppercase font-bold">Seconds</label>
+                  <div className="flex gap-1">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const current = state.shotClockSeconds;
+                        updateState({ shotClockSeconds: Math.min(24, current + 1) });
+                      }}
+                      className="h-6 w-6 p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                    >
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                        <path d="M18 15l-6-6-6 6"/>
+                      </svg>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        const current = state.shotClockSeconds;
+                        updateState({ shotClockSeconds: Math.max(0, current - 1) });
+                      }}
+                      className="h-6 w-6 p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                    >
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                        <path d="M6 9l6 6 6-6"/>
+                      </svg>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => updateState({ shotClockSeconds: 24 })}
+                  className="text-xs px-2 py-1 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                >
+                  24s
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => updateState({ shotClockSeconds: 14 })}
+                  className="text-xs px-2 py-1 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                >
+                  14s
+                </Button>
+                <Button
+                  variant={state.shotClockRunning ? 'destructive' : 'default'}
+                  size="sm"
+                  onClick={() => updateState({ shotClockRunning: !state.shotClockRunning })}
+                  className="text-xs px-2 py-1 focus:outline-none"
+                >
+                  {state.shotClockRunning ? '⏸ Stop' : '▶ Start'}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleShotClockBuzzer}
+                  className="text-xs px-2 py-1 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                  title="Test buzzer"
+                >
+                  {shotClockBuzzerText}
+                </Button>
+              </div>
+            </div>
+            <div className="mt-4">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => updateState({ possession: state.possession === 'home' ? 'away' : 'home' })}
+                className="text-xs px-3 py-1 text-white border-white hover:bg-white hover:text-black uppercase font-bold focus:outline-none"
+              >
+                POSSESSION
+              </Button>
+              <div className="flex items-center justify-center gap-2 mt-2">
+                <div
+                  className={`w-0 h-0 border-t-[12px] border-b-[12px] border-r-[20px] 
+                    border-t-transparent border-b-transparent transition-all cursor-pointer ${
+                    state.possession === 'away'
+                      ? 'border-r-yellow-500 opacity-100'
+                      : 'border-r-white opacity-30'
+                  }`}
+                  onClick={() => updateState({ possession: state.possession === 'home' ? 'away' : 'home' })}
+                />
+                <div
+                  className={`w-0 h-0 border-t-[12px] border-b-[12px] border-l-[20px] 
+                    border-t-transparent border-b-transparent transition-all cursor-pointer ${
+                    state.possession === 'home'
+                      ? 'border-l-yellow-500 opacity-100'
+                      : 'border-l-white opacity-30'
+                  }`}
+                  onClick={() => updateState({ possession: state.possession === 'home' ? 'away' : 'home' })}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Right: Away Score and Fouls */}
+          <div className="text-center flex flex-col items-center">
+            <input
+              type="text"
+              value={state.away.name}
+              onChange={(e) => updateTeam('away', { name: e.target.value })}
+              className="text-2xl sm:text-3xl font-bold text-white bg-transparent border-none text-center focus:outline-none focus:ring-2 focus:ring-yellow-500 rounded px-2 cursor-text uppercase mb-2"
+              style={{ backgroundColor: '#141414' }}
+              placeholder="AWAY"
+            />
+            <div className="border-2 border-white bg-black px-4 py-3 mb-4 w-[280px]">
+              <div className="text-6xl sm:text-8xl font-black clock-font text-red-500 text-center">
+                {state.away.score}
+              </div>
+            </div>
+            <div className="flex justify-center gap-2 mb-4">
+              <Button variant="outline" size="sm" onClick={() => adjustScore('away', 1)} className="text-white border-white hover:bg-white hover:text-black focus:outline-none">
+                +1
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => adjustScore('away', 2)} className="text-white border-white hover:bg-white hover:text-black focus:outline-none">
+                +2
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => adjustScore('away', 3)} className="text-white border-white hover:bg-white hover:text-black focus:outline-none">
+                +3
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => adjustScore('away', -1)} className="text-white border-white hover:bg-white hover:text-black focus:outline-none">
+                -1
+              </Button>
+            </div>
+            <div className="mb-2">
+              <div className="text-sm text-white mb-1 uppercase font-bold">FOULS</div>
+              <div className="inline-flex items-center justify-center">
+                <div className="bg-black border-2 border-white text-orange-500 text-2xl font-black clock-font px-4 py-2 w-[60px] text-center">
+                  {state.away.fouls}
+                </div>
+                <div className="flex flex-col ml-2 gap-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => adjustFouls('away', 1)}
+                    className="h-6 w-6 p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                  >
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                      <path d="M18 15l-6-6-6 6"/>
+                    </svg>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => adjustFouls('away', -1)}
+                    className="h-6 w-6 p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                  >
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                      <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                  </Button>
+                </div>
+              </div>
+            </div>
+            <div className="mt-2">
+              <div className="text-xs text-white mb-1 font-bold">Timeouts: {state.away.timeouts}</div>
+              <div className="flex gap-1 justify-center">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => adjustTimeouts('away', -1)}
+                  className="h-6 w-6 p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                >
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <path d="M6 9l6 6 6-6"/>
+                  </svg>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => adjustTimeouts('away', 1)}
+                  className="h-6 w-6 p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                >
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <path d="M18 15l-6-6-6 6"/>
+                  </svg>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
