@@ -150,7 +150,7 @@ export function Scoreboard() {
         <div className="flex justify-center mb-2 sm:mb-4 md:mb-6">
           <div className="flex flex-col items-center justify-center w-full">
             <div className="border-2 border-white bg-black px-2 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-3 mb-2 w-full max-w-[420px]">
-              <div className="text-[clamp(2rem,8vw,8rem)] font-black clock-font text-yellow-500 text-center leading-none">
+              <div className="text-[clamp(2rem,6vw,5.5rem)] font-black clock-font text-yellow-500 text-center leading-none">
                 {formatGameClock()}
               </div>
             </div>
