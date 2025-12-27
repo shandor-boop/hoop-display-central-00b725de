@@ -14,6 +14,8 @@ export interface GameState {
   gameClockMinutes: number;
   gameClockSeconds: number;
   shotClockSeconds: number;
+  defaultShotClockSeconds: number; // Default shot clock duration (24 for NBA/FIBA, 30 for NCAA)
+  shotClockEnabled: boolean; // Whether shot clock is enabled for this game
   possession: 'home' | 'away';
   gameClockRunning: boolean;
   shotClockRunning: boolean;
@@ -24,12 +26,14 @@ const STORAGE_KEY = 'basketball-scoreboard-state';
 const BROADCAST_CHANNEL = 'basketball-scoreboard';
 
 export const initialState: GameState = {
-  home: { name: 'HOME', score: 0, fouls: 0, timeouts: 5 },
-  away: { name: 'AWAY', score: 0, fouls: 0, timeouts: 5 },
+  home: { name: 'HOME', score: 0, fouls: 0, timeouts: 7 }, // NBA: 7 per game, NCAA: 6, High School: 5
+  away: { name: 'AWAY', score: 0, fouls: 0, timeouts: 7 },
   period: 1,
-  gameClockMinutes: 12,
+  gameClockMinutes: 12, // NBA quarter length (NCAA: 20 min halves, FIBA: 10 min quarters, High School: 8 min quarters)
   gameClockSeconds: 0,
-  shotClockSeconds: 24,
+  shotClockSeconds: 24, // Current shot clock value
+  defaultShotClockSeconds: 24, // NBA/FIBA: 24 seconds, NCAA/High School: 30 seconds
+  shotClockEnabled: true, // Shot clock enabled by default (can be disabled for some leagues)
   possession: 'home',
   gameClockRunning: false,
   shotClockRunning: false,

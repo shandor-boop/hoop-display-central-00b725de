@@ -1,52 +1,40 @@
-// Buzzer sound system using Web Audio API
-// No external audio files needed!
+// Buzzer sound system using audio files
+// Import audio files
+import gameClockSound from '../assets/sounds/game-clock-buzzer.mp3';
+import shotClockSound from '../assets/sounds/shot-clock-buzzer.mp3';
 
-let audioContext: AudioContext | null = null;
+let gameClockAudio: HTMLAudioElement | null = null;
+let shotClockAudio: HTMLAudioElement | null = null;
 
-function getAudioContext(): AudioContext {
-  if (!audioContext) {
-    audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+function getGameClockAudio(): HTMLAudioElement {
+  if (!gameClockAudio) {
+    gameClockAudio = new Audio(gameClockSound);
+    gameClockAudio.volume = 0.7; // Adjust volume (0.0 to 1.0)
   }
-  return audioContext;
+  return gameClockAudio;
 }
 
-// Game clock buzzer - longer, more urgent sound
+function getShotClockAudio(): HTMLAudioElement {
+  if (!shotClockAudio) {
+    shotClockAudio = new Audio(shotClockSound);
+    shotClockAudio.volume = 0.7; // Adjust volume (0.0 to 1.0)
+  }
+  return shotClockAudio;
+}
+
 export function playGameClockBuzzer(): void {
-  const ctx = getAudioContext();
-  const oscillator = ctx.createOscillator();
-  const gainNode = ctx.createGain();
-
-  oscillator.connect(gainNode);
-  gainNode.connect(ctx.destination);
-
-  // Lower frequency, longer duration for game clock
-  oscillator.frequency.setValueAtTime(400, ctx.currentTime);
-  oscillator.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.5);
-
-  gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
-  gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
-
-  oscillator.start(ctx.currentTime);
-  oscillator.stop(ctx.currentTime + 0.5);
+  const audio = getGameClockAudio();
+  audio.currentTime = 0; // Reset to start
+  audio.play().catch((error) => {
+    console.error('Failed to play game clock buzzer:', error);
+  });
 }
 
-// Shot clock buzzer - shorter, sharper sound
 export function playShotClockBuzzer(): void {
-  const ctx = getAudioContext();
-  const oscillator = ctx.createOscillator();
-  const gainNode = ctx.createGain();
-
-  oscillator.connect(gainNode);
-  gainNode.connect(ctx.destination);
-
-  // Higher frequency, shorter duration for shot clock
-  oscillator.frequency.setValueAtTime(800, ctx.currentTime);
-  oscillator.frequency.exponentialRampToValueAtTime(600, ctx.currentTime + 0.2);
-
-  gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
-  gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
-
-  oscillator.start(ctx.currentTime);
-  oscillator.stop(ctx.currentTime + 0.2);
+  const audio = getShotClockAudio();
+  audio.currentTime = 0; // Reset to start
+  audio.play().catch((error) => {
+    console.error('Failed to play shot clock buzzer:', error);
+  });
 }
 

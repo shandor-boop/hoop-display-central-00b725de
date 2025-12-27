@@ -132,11 +132,11 @@ export function useGameState() {
   }, [state.gameClockRunning]);
 
   useEffect(() => {
-    if (!state.shotClockRunning) return;
+    if (!state.shotClockRunning || !state.shotClockEnabled) return;
 
     const timer = setInterval(() => {
       setState((prev) => {
-        if (!prev.shotClockRunning) return prev;
+        if (!prev.shotClockRunning || !prev.shotClockEnabled) return prev;
         
         if (prev.shotClockSeconds <= 0) {
           // Shot clock reached zero - play buzzer if enabled and not already played
@@ -164,7 +164,7 @@ export function useGameState() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [state.shotClockRunning]);
+  }, [state.shotClockRunning, state.shotClockEnabled]);
 
   // Format helpers
   const formatGameClock = useCallback(() => {
