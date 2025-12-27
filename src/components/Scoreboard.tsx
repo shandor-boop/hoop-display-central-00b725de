@@ -405,7 +405,7 @@ export function Scoreboard() {
                       shotClockSeconds: 24,
                     });
                   }}
-                  className={`text-[clamp(0.625rem,1.5vw,0.75rem)] px-1 sm:px-2 py-0.5 sm:py-1 text-white border-white hover:bg-white hover:text-black focus:outline-none ${state.defaultShotClockSeconds === 24 ? 'bg-white text-black' : ''}`}
+                  className={`text-[clamp(0.625rem,1.5vw,0.75rem)] px-1 sm:px-2 py-0.5 sm:py-1 text-white border-white hover:bg-white hover:text-black focus:outline-none ${state.defaultShotClockSeconds === 24 ? 'border-yellow-400 border-2' : ''}`}
                   title="Set default to 24s (NBA/FIBA)"
                 >
                   24s
@@ -420,7 +420,7 @@ export function Scoreboard() {
                       shotClockSeconds: 30,
                     });
                   }}
-                  className={`text-[clamp(0.625rem,1.5vw,0.75rem)] px-1 sm:px-2 py-0.5 sm:py-1 text-white border-white hover:bg-white hover:text-black focus:outline-none ${state.defaultShotClockSeconds === 30 ? 'bg-white text-black' : ''}`}
+                  className={`text-[clamp(0.625rem,1.5vw,0.75rem)] px-1 sm:px-2 py-0.5 sm:py-1 text-white border-white hover:bg-white hover:text-black focus:outline-none ${state.defaultShotClockSeconds === 30 ? 'border-yellow-400 border-2' : ''}`}
                   title="Set default to 30s (NCAA/High School)"
                 >
                   30s
