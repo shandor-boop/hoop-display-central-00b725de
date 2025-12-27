@@ -21,21 +21,6 @@ export function Scoreboard() {
   const gameClockBuzzerClickedRef = useRef(false);
   const shotClockBuzzerClickedRef = useRef(false);
 
-  // Fullscreen toggle
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (e.key === 'f' || e.key === 'F') {
-        if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen();
-        } else {
-          document.exitFullscreen();
-        }
-      }
-    };
-    document.addEventListener('keydown', handleKeyPress);
-    return () => document.removeEventListener('keydown', handleKeyPress);
-  }, []);
-
   const handleGameClockBuzzer = () => {
     if (!gameClockBuzzerClickedRef.current) {
       // First click - show "Sure?"
@@ -246,7 +231,7 @@ export function Scoreboard() {
               type="text"
               value={state.home.name}
               onChange={(e) => updateTeam('home', { name: e.target.value })}
-              className="text-[clamp(1rem,3vw,1.875rem)] font-bold text-white bg-transparent border-none text-center focus:outline-none focus:ring-2 focus:ring-yellow-500 rounded px-1 sm:px-2 cursor-text uppercase mb-1 sm:mb-2 w-full"
+              className="text-[clamp(1rem,3vw,1.875rem)] font-bold text-white bg-transparent border-none text-center focus:outline-none focus:ring-2 focus:ring-yellow-500 rounded px-1 sm:px-2 cursor-text uppercase mb-1 sm:mb-2 w-full hover:bg-gray-800/30 hover:underline transition-all"
               style={{ backgroundColor: '#141414' }}
               placeholder="HOME"
             />
@@ -520,7 +505,7 @@ export function Scoreboard() {
               type="text"
               value={state.away.name}
               onChange={(e) => updateTeam('away', { name: e.target.value })}
-              className="text-[clamp(1rem,3vw,1.875rem)] font-bold text-white bg-transparent border-none text-center focus:outline-none focus:ring-2 focus:ring-yellow-500 rounded px-1 sm:px-2 cursor-text uppercase mb-1 sm:mb-2 w-full"
+              className="text-[clamp(1rem,3vw,1.875rem)] font-bold text-white bg-transparent border-none text-center focus:outline-none focus:ring-2 focus:ring-yellow-500 rounded px-1 sm:px-2 cursor-text uppercase mb-1 sm:mb-2 w-full hover:bg-gray-800/30 hover:underline transition-all"
               style={{ backgroundColor: '#141414' }}
               placeholder="AWAY"
             />
@@ -613,7 +598,7 @@ export function Scoreboard() {
             }}
             className="text-gray-400 hover:text-gray-300 underline text-xs sm:text-sm focus:outline-none transition-colors"
           >
-            Press F or click here for fullscreen
+            Click for fullscreen
           </button>
           <button
             onClick={() => {
