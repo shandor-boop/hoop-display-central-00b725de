@@ -10,6 +10,9 @@ import { playGameClockBuzzer, playShotClockBuzzer } from '../utils/buzzer';
 
 export function useGameState() {
   const [state, setState] = useState<GameState>(loadState);
+  
+  // Check if we're in display mode (only control window should run timers)
+  const isDisplayMode = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('display') === 'true';
 
   // Save to localStorage whenever state changes
   useEffect(() => {
@@ -92,9 +95,9 @@ export function useGameState() {
     }
   }, [state.shotClockSeconds]);
 
-  // Clock tick handlers (only run in one window)
+  // Clock tick handlers (only run in control window, not display window)
   useEffect(() => {
-    if (!state.gameClockRunning) return;
+    if (!state.gameClockRunning || isDisplayMode) return;
 
     const timer = setInterval(() => {
       setState((prev) => {
@@ -129,10 +132,10 @@ export function useGameState() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [state.gameClockRunning]);
+  }, [state.gameClockRunning, isDisplayMode]);
 
   useEffect(() => {
-    if (!state.shotClockRunning || !state.shotClockEnabled) return;
+    if (!state.shotClockRunning || !state.shotClockEnabled || isDisplayMode) return;
 
     const timer = setInterval(() => {
       setState((prev) => {
@@ -164,7 +167,7 @@ export function useGameState() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [state.shotClockRunning, state.shotClockEnabled]);
+  }, [state.shotClockRunning, state.shotClockEnabled, isDisplayMode]);
 
   // Format helpers
   const formatGameClock = useCallback(() => {

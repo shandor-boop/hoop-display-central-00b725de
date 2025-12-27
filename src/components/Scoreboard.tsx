@@ -131,11 +131,17 @@ export function Scoreboard() {
     const newPossession = state.possession === 'home' ? 'away' : 'home';
     // Only reset/start shot clock if it's enabled
     if (state.shotClockEnabled) {
+      const defaultSeconds = state.defaultShotClockSeconds;
+      // Stop timer first, then restart to ensure it counts down from the reset value
       updateState({ 
         possession: newPossession,
-        shotClockSeconds: state.defaultShotClockSeconds, // Reset to default (24s NBA/FIBA, 30s NCAA)
-        shotClockRunning: true, // Start shot clock automatically when possession changes
+        shotClockSeconds: defaultSeconds, // Reset to default (24s NBA/FIBA, 30s NCAA)
+        shotClockRunning: false, // Stop the timer to force restart
       });
+      // Restart timer immediately after state update to begin countdown from default
+      setTimeout(() => {
+        updateState({ shotClockRunning: true });
+      }, 0);
     } else {
       updateState({ 
         possession: newPossession,
@@ -428,9 +434,15 @@ export function Scoreboard() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => updateState({ shotClockSeconds: 14 })}
-                  className="text-[clamp(0.625rem,1.5vw,0.75rem)] px-1 sm:px-2 py-0.5 sm:py-1 text-white border-white hover:bg-white hover:text-black focus:outline-none"
-                  title="Reset to 14s (offensive rebound - NBA/FIBA rule)"
+                  onClick={() => {
+                    // Set default shot clock to 14s and reset current to that value
+                    updateState({ 
+                      defaultShotClockSeconds: 14,
+                      shotClockSeconds: 14,
+                    });
+                  }}
+                  className={`text-[clamp(0.625rem,1.5vw,0.75rem)] px-1 sm:px-2 py-0.5 sm:py-1 text-white border-white hover:bg-white hover:text-black focus:outline-none ${state.defaultShotClockSeconds === 14 ? 'border-yellow-400 border-2' : ''}`}
+                  title="Set default to 14s (offensive rebound - NBA/FIBA rule)"
                 >
                   14s
                 </Button>
@@ -587,6 +599,32 @@ export function Scoreboard() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Footer Links */}
+        <div className="flex flex-col items-center gap-1 mt-4 sm:mt-6">
+          <button
+            onClick={() => {
+              if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+              } else {
+                document.exitFullscreen();
+              }
+            }}
+            className="text-gray-400 hover:text-gray-300 underline text-xs sm:text-sm focus:outline-none transition-colors"
+          >
+            Press F or click here for fullscreen
+          </button>
+          <button
+            onClick={() => {
+              const url = new URL(window.location.href);
+              url.searchParams.set('display', 'true');
+              window.open(url.toString(), 'scoreboard-display', 'width=1920,height=1080');
+            }}
+            className="text-gray-400 hover:text-gray-300 underline text-xs sm:text-sm focus:outline-none transition-colors"
+          >
+            Click for split view
+          </button>
         </div>
       </div>
     </div>
