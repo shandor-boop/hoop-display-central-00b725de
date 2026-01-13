@@ -153,7 +153,7 @@ export function Scoreboard() {
                     variant="outline"
                     size="sm"
                     onClick={() => adjustGameClock(1, 0)}
-                    className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(1.5rem,4vw,2rem)] p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                    className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(1.5rem,4vw,2rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                     title="Increase minutes"
                   >
                     <svg className="w-[clamp(0.5rem,1.5vw,0.75rem)] h-[clamp(0.5rem,1.5vw,0.75rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
@@ -164,7 +164,7 @@ export function Scoreboard() {
                     variant="outline"
                     size="sm"
                     onClick={() => adjustGameClock(-1, 0)}
-                    className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(1.5rem,4vw,2rem)] p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                    className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(1.5rem,4vw,2rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                     title="Decrease minutes"
                   >
                     <svg className="w-[clamp(0.5rem,1.5vw,0.75rem)] h-[clamp(0.5rem,1.5vw,0.75rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
@@ -180,7 +180,7 @@ export function Scoreboard() {
                     variant="outline"
                     size="sm"
                     onClick={() => adjustGameClock(0, 1)}
-                    className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(1.5rem,4vw,2rem)] p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                    className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(1.5rem,4vw,2rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                     title="Increase seconds"
                   >
                     <svg className="w-[clamp(0.5rem,1.5vw,0.75rem)] h-[clamp(0.5rem,1.5vw,0.75rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
@@ -191,7 +191,7 @@ export function Scoreboard() {
                     variant="outline"
                     size="sm"
                     onClick={() => adjustGameClock(0, -1)}
-                    className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(1.5rem,4vw,2rem)] p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                    className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(1.5rem,4vw,2rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                     title="Decrease seconds"
                   >
                     <svg className="w-[clamp(0.5rem,1.5vw,0.75rem)] h-[clamp(0.5rem,1.5vw,0.75rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
@@ -214,7 +214,7 @@ export function Scoreboard() {
                 variant="outline"
                 size="sm"
                 onClick={handleGameClockBuzzer}
-                className="text-[clamp(0.625rem,1.5vw,0.75rem)] px-2 sm:px-3 py-0.5 sm:py-1 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                className="text-[clamp(0.625rem,1.5vw,0.75rem)] px-2 sm:px-3 py-0.5 sm:py-1 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                 title="Test buzzer"
               >
                 {gameClockBuzzerText}
@@ -241,16 +241,16 @@ export function Scoreboard() {
               </div>
             </div>
             <div className="flex justify-center gap-0.5 sm:gap-1 md:gap-2 mb-2 sm:mb-3 md:mb-4">
-              <Button variant="outline" size="sm" onClick={() => adjustScore('home', 1)} className="text-white border-white hover:bg-white hover:text-black focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
+              <Button variant="outline" size="sm" onClick={() => adjustScore('home', 1)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
                 +1
               </Button>
-              <Button variant="outline" size="sm" onClick={() => adjustScore('home', 2)} className="text-white border-white hover:bg-white hover:text-black focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
+              <Button variant="outline" size="sm" onClick={() => adjustScore('home', 2)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
                 +2
               </Button>
-              <Button variant="outline" size="sm" onClick={() => adjustScore('home', 3)} className="text-white border-white hover:bg-white hover:text-black focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
+              <Button variant="outline" size="sm" onClick={() => adjustScore('home', 3)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
                 +3
               </Button>
-              <Button variant="outline" size="sm" onClick={() => adjustScore('home', -1)} className="text-white border-white hover:bg-white hover:text-black focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
+              <Button variant="outline" size="sm" onClick={() => adjustScore('home', -1)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
                 -1
               </Button>
             </div>
@@ -265,7 +265,7 @@ export function Scoreboard() {
                     variant="outline"
                     size="sm"
                     onClick={() => adjustFouls('home', 1)}
-                    className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                    className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                   >
                     <svg className="w-[clamp(0.4rem,1vw,0.625rem)] h-[clamp(0.4rem,1vw,0.625rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                       <path d="M18 15l-6-6-6 6"/>
@@ -275,7 +275,7 @@ export function Scoreboard() {
                     variant="outline"
                     size="sm"
                     onClick={() => adjustFouls('home', -1)}
-                    className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                    className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                   >
                     <svg className="w-[clamp(0.4rem,1vw,0.625rem)] h-[clamp(0.4rem,1vw,0.625rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                       <path d="M6 9l6 6 6-6"/>
@@ -291,7 +291,7 @@ export function Scoreboard() {
                   variant="outline"
                   size="sm"
                   onClick={() => adjustTimeouts('home', -1)}
-                  className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                  className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                 >
                   <svg className="w-[clamp(0.4rem,1vw,0.625rem)] h-[clamp(0.4rem,1vw,0.625rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                     <path d="M6 9l6 6 6-6"/>
@@ -301,7 +301,7 @@ export function Scoreboard() {
                   variant="outline"
                   size="sm"
                   onClick={() => adjustTimeouts('home', 1)}
-                  className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                  className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                 >
                   <svg className="w-[clamp(0.4rem,1vw,0.625rem)] h-[clamp(0.4rem,1vw,0.625rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                     <path d="M18 15l-6-6-6 6"/>
@@ -315,8 +315,8 @@ export function Scoreboard() {
           <div className="text-center flex flex-col items-center">
             <div className="mb-2 sm:mb-3 md:mb-4">
               <div className="text-[clamp(0.625rem,1.5vw,0.875rem)] text-white mb-0.5 sm:mb-1 uppercase font-bold">PERIOD</div>
-              <div className="border-2 border-white bg-black px-2 sm:px-4 md:px-6 py-1.5 sm:py-3 md:py-4 mb-1 sm:mb-2 w-full max-w-[clamp(4rem,12vw,7.5rem)] mx-auto">
-                <div className="text-[clamp(2.5rem,8vw,8rem)] font-black clock-font text-yellow-500 text-center leading-none">
+              <div className="border-2 border-white bg-black px-2 sm:px-3 md:px-4 py-1 sm:py-2 mb-1 sm:mb-2 w-full max-w-[clamp(4.5rem,14vw,8.75rem)] mx-auto">
+                <div className="text-[clamp(1.5rem,5vw,4rem)] font-black clock-font text-yellow-500 text-center leading-none">
                   {state.period}
                 </div>
               </div>
@@ -325,7 +325,7 @@ export function Scoreboard() {
                   variant="outline"
                   size="sm"
                   onClick={() => adjustPeriod(-1)}
-                  className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(1.5rem,4vw,2rem)] p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                  className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(1.5rem,4vw,2rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                 >
                   <svg className="w-[clamp(0.5rem,1.5vw,0.75rem)] h-[clamp(0.5rem,1.5vw,0.75rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                     <path d="M6 9l6 6 6-6"/>
@@ -335,7 +335,7 @@ export function Scoreboard() {
                   variant="outline"
                   size="sm"
                   onClick={() => adjustPeriod(1)}
-                  className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(1.5rem,4vw,2rem)] p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                  className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(1.5rem,4vw,2rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                 >
                   <svg className="w-[clamp(0.5rem,1.5vw,0.75rem)] h-[clamp(0.5rem,1.5vw,0.75rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                     <path d="M18 15l-6-6-6 6"/>
@@ -345,8 +345,8 @@ export function Scoreboard() {
             </div>
             <div className="mb-2 sm:mb-3 md:mb-4">
               <div className="text-[clamp(0.625rem,1.5vw,0.75rem)] text-white mb-1 sm:mb-2 uppercase font-bold">Shot Clock</div>
-              <div className={`inline-block border-2 border-white bg-black px-2 sm:px-3 md:px-4 py-1 sm:py-2 mb-1 sm:mb-2 w-full max-w-[clamp(4.5rem,14vw,8.75rem)] ${!state.shotClockEnabled ? 'opacity-50' : ''}`}>
-                <div className={`text-[clamp(1.5rem,5vw,4rem)] font-black clock-font text-center leading-none ${state.shotClockEnabled ? 'text-yellow-500' : 'text-gray-500'}`}>
+              <div className={`border-2 border-white bg-black px-2 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-3 mb-1 sm:mb-2 w-full max-w-[420px] ${!state.shotClockEnabled ? 'opacity-50' : ''}`}>
+                <div className={`text-[clamp(2rem,6vw,5.5rem)] font-black clock-font text-center leading-none ${state.shotClockEnabled ? 'text-yellow-500' : 'text-gray-500'}`}>
                   {state.shotClockEnabled ? formatShotClock() : '--'}
                 </div>
               </div>
@@ -362,7 +362,7 @@ export function Scoreboard() {
                           const current = state.shotClockSeconds;
                           updateState({ shotClockSeconds: Math.min(state.defaultShotClockSeconds, current + 1) });
                         }}
-                        className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                        className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                       >
                         <svg className="w-[clamp(0.4rem,1vw,0.625rem)] h-[clamp(0.4rem,1vw,0.625rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                           <path d="M18 15l-6-6-6 6"/>
@@ -375,7 +375,7 @@ export function Scoreboard() {
                           const current = state.shotClockSeconds;
                           updateState({ shotClockSeconds: Math.max(0, current - 1) });
                         }}
-                        className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                        className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                       >
                         <svg className="w-[clamp(0.4rem,1vw,0.625rem)] h-[clamp(0.4rem,1vw,0.625rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                           <path d="M6 9l6 6 6-6"/>
@@ -396,7 +396,7 @@ export function Scoreboard() {
                       shotClockSeconds: 24,
                     });
                   }}
-                  className={`text-[clamp(0.625rem,1.5vw,0.75rem)] px-1 sm:px-2 py-0.5 sm:py-1 text-white border-white hover:bg-white hover:text-black focus:outline-none ${state.defaultShotClockSeconds === 24 ? 'border-yellow-400 border-2' : ''}`}
+                  className={`text-[clamp(0.625rem,1.5vw,0.75rem)] px-1 sm:px-2 py-0.5 sm:py-1 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none ${state.defaultShotClockSeconds === 24 ? 'border-yellow-400 border-2' : ''}`}
                   title="Set default to 24s (NBA/FIBA)"
                 >
                   24s
@@ -411,7 +411,7 @@ export function Scoreboard() {
                       shotClockSeconds: 30,
                     });
                   }}
-                  className={`text-[clamp(0.625rem,1.5vw,0.75rem)] px-1 sm:px-2 py-0.5 sm:py-1 text-white border-white hover:bg-white hover:text-black focus:outline-none ${state.defaultShotClockSeconds === 30 ? 'border-yellow-400 border-2' : ''}`}
+                  className={`text-[clamp(0.625rem,1.5vw,0.75rem)] px-1 sm:px-2 py-0.5 sm:py-1 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none ${state.defaultShotClockSeconds === 30 ? 'border-yellow-400 border-2' : ''}`}
                   title="Set default to 30s (NCAA/High School)"
                 >
                   30s
@@ -426,7 +426,7 @@ export function Scoreboard() {
                       shotClockSeconds: 14,
                     });
                   }}
-                  className={`text-[clamp(0.625rem,1.5vw,0.75rem)] px-1 sm:px-2 py-0.5 sm:py-1 text-white border-white hover:bg-white hover:text-black focus:outline-none ${state.defaultShotClockSeconds === 14 ? 'border-yellow-400 border-2' : ''}`}
+                  className={`text-[clamp(0.625rem,1.5vw,0.75rem)] px-1 sm:px-2 py-0.5 sm:py-1 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none ${state.defaultShotClockSeconds === 14 ? 'border-yellow-400 border-2' : ''}`}
                   title="Set default to 14s (offensive rebound - NBA/FIBA rule)"
                 >
                   14s
@@ -460,7 +460,7 @@ export function Scoreboard() {
                   variant="outline"
                   size="sm"
                   onClick={handleShotClockBuzzer}
-                  className="text-[clamp(0.625rem,1.5vw,0.75rem)] px-1 sm:px-2 py-0.5 sm:py-1 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                  className="text-[clamp(0.625rem,1.5vw,0.75rem)] px-1 sm:px-2 py-0.5 sm:py-1 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                   title="Test buzzer"
                 >
                   {shotClockBuzzerText}
@@ -472,7 +472,7 @@ export function Scoreboard() {
                 variant="outline"
                 size="sm"
                 onClick={togglePossession}
-                className="text-[clamp(0.625rem,1.5vw,0.75rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1 text-white border-white hover:bg-white hover:text-black uppercase font-bold focus:outline-none"
+                className="text-[clamp(0.625rem,1.5vw,0.75rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1 text-white border-white hover:bg-gray-700 hover:text-gray-200 uppercase font-bold focus:outline-none"
               >
                 POSSESSION
               </Button>
@@ -515,16 +515,16 @@ export function Scoreboard() {
               </div>
             </div>
             <div className="flex justify-center gap-0.5 sm:gap-1 md:gap-2 mb-2 sm:mb-3 md:mb-4">
-              <Button variant="outline" size="sm" onClick={() => adjustScore('away', 1)} className="text-white border-white hover:bg-white hover:text-black focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
+              <Button variant="outline" size="sm" onClick={() => adjustScore('away', 1)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
                 +1
               </Button>
-              <Button variant="outline" size="sm" onClick={() => adjustScore('away', 2)} className="text-white border-white hover:bg-white hover:text-black focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
+              <Button variant="outline" size="sm" onClick={() => adjustScore('away', 2)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
                 +2
               </Button>
-              <Button variant="outline" size="sm" onClick={() => adjustScore('away', 3)} className="text-white border-white hover:bg-white hover:text-black focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
+              <Button variant="outline" size="sm" onClick={() => adjustScore('away', 3)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
                 +3
               </Button>
-              <Button variant="outline" size="sm" onClick={() => adjustScore('away', -1)} className="text-white border-white hover:bg-white hover:text-black focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
+              <Button variant="outline" size="sm" onClick={() => adjustScore('away', -1)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
                 -1
               </Button>
             </div>
@@ -539,7 +539,7 @@ export function Scoreboard() {
                     variant="outline"
                     size="sm"
                     onClick={() => adjustFouls('away', 1)}
-                    className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                    className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                   >
                     <svg className="w-[clamp(0.4rem,1vw,0.625rem)] h-[clamp(0.4rem,1vw,0.625rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                       <path d="M18 15l-6-6-6 6"/>
@@ -549,7 +549,7 @@ export function Scoreboard() {
                     variant="outline"
                     size="sm"
                     onClick={() => adjustFouls('away', -1)}
-                    className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                    className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                   >
                     <svg className="w-[clamp(0.4rem,1vw,0.625rem)] h-[clamp(0.4rem,1vw,0.625rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                       <path d="M6 9l6 6 6-6"/>
@@ -565,7 +565,7 @@ export function Scoreboard() {
                   variant="outline"
                   size="sm"
                   onClick={() => adjustTimeouts('away', -1)}
-                  className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                  className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                 >
                   <svg className="w-[clamp(0.4rem,1vw,0.625rem)] h-[clamp(0.4rem,1vw,0.625rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                     <path d="M6 9l6 6 6-6"/>
@@ -575,7 +575,7 @@ export function Scoreboard() {
                   variant="outline"
                   size="sm"
                   onClick={() => adjustTimeouts('away', 1)}
-                  className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-white hover:text-black focus:outline-none"
+                  className="h-[clamp(1.25rem,3vw,1.5rem)] w-[clamp(1.25rem,3vw,1.5rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
                 >
                   <svg className="w-[clamp(0.4rem,1vw,0.625rem)] h-[clamp(0.4rem,1vw,0.625rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                     <path d="M18 15l-6-6-6 6"/>
