@@ -7,6 +7,8 @@ export function ScoreboardDisplay() {
     formatShotClock,
   } = useGameState();
 
+  const isShotClockWarning = state.shotClockEnabled && state.shotClockSeconds <= 10;
+
   return (
     <div className="min-h-screen flex items-center justify-center p-1 sm:p-2 md:p-4" style={{ backgroundColor: '#141414' }}>
       <div className="w-full max-w-7xl rounded-lg p-1 sm:p-2 md:p-4 lg:p-6" style={{ backgroundColor: '#141414' }}>
@@ -59,7 +61,15 @@ export function ScoreboardDisplay() {
             <div className="mb-2 sm:mb-3 md:mb-4">
               <div className="text-[clamp(0.625rem,1.5vw,0.75rem)] text-white mb-1 sm:mb-2 uppercase font-bold">Shot Clock</div>
               <div className={`border-2 border-white bg-black px-2 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-3 mb-1 sm:mb-2 w-full max-w-[420px] ${!state.shotClockEnabled ? 'opacity-50' : ''}`}>
-                <div className={`text-[clamp(2rem,6vw,5.5rem)] font-black clock-font text-center leading-none ${state.shotClockEnabled ? 'text-yellow-500' : 'text-gray-500'}`}>
+                <div
+                  className={`text-[clamp(2rem,6vw,5.5rem)] font-black clock-font text-center leading-none ${
+                    state.shotClockEnabled
+                      ? isShotClockWarning
+                        ? 'text-red-500'
+                        : 'text-yellow-500'
+                      : 'text-gray-500'
+                  }`}
+                >
                   {state.shotClockEnabled ? formatShotClock() : '--'}
                 </div>
               </div>

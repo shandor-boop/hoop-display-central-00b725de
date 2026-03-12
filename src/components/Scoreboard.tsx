@@ -134,6 +134,8 @@ export function Scoreboard() {
     }
   };
 
+  const isShotClockWarning = state.shotClockEnabled && state.shotClockSeconds <= 10;
+
   return (
     <div className="min-h-screen flex items-center justify-center p-1 sm:p-2 md:p-4" style={{ backgroundColor: '#141414' }}>
       <div className="w-full max-w-7xl rounded-lg p-1 sm:p-2 md:p-4 lg:p-6" style={{ backgroundColor: '#141414' }}>
@@ -148,57 +150,35 @@ export function Scoreboard() {
             <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4 mt-1 sm:mt-2">
               <div className="flex flex-col items-center gap-0.5 sm:gap-1">
                 <label className="text-[clamp(0.625rem,1.5vw,0.75rem)] text-white uppercase font-bold">Minutes</label>
-                <div className="flex gap-0.5 sm:gap-1">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => adjustGameClock(1, 0)}
-                    className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(1.5rem,4vw,2rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
-                    title="Increase minutes"
-                  >
-                    <svg className="w-[clamp(0.5rem,1.5vw,0.75rem)] h-[clamp(0.5rem,1.5vw,0.75rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                      <path d="M18 15l-6-6-6 6"/>
-                    </svg>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => adjustGameClock(-1, 0)}
-                    className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(1.5rem,4vw,2rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
-                    title="Decrease minutes"
-                  >
-                    <svg className="w-[clamp(0.5rem,1.5vw,0.75rem)] h-[clamp(0.5rem,1.5vw,0.75rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                      <path d="M6 9l6 6 6-6"/>
-                    </svg>
-                  </Button>
-                </div>
+                <input
+                  type="number"
+                  min={0}
+                  max={99}
+                  value={state.gameClockMinutes}
+                  onChange={(e) => {
+                    const raw = e.target.value;
+                    const num = Number(raw.replace(/[^0-9]/g, ''));
+                    const minutes = Math.max(0, Math.min(99, isNaN(num) ? 0 : num));
+                    updateState({ gameClockMinutes: minutes });
+                  }}
+                  className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(3rem,8vw,4rem)] text-center text-white bg-black border border-white rounded focus:outline-none focus:ring-2 focus:ring-yellow-500 text-[clamp(0.75rem,2vw,1rem)]"
+                />
               </div>
               <div className="flex flex-col items-center gap-0.5 sm:gap-1">
                 <label className="text-[clamp(0.625rem,1.5vw,0.75rem)] text-white uppercase font-bold">Seconds</label>
-                <div className="flex gap-0.5 sm:gap-1">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => adjustGameClock(0, 1)}
-                    className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(1.5rem,4vw,2rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
-                    title="Increase seconds"
-                  >
-                    <svg className="w-[clamp(0.5rem,1.5vw,0.75rem)] h-[clamp(0.5rem,1.5vw,0.75rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                      <path d="M18 15l-6-6-6 6"/>
-                    </svg>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => adjustGameClock(0, -1)}
-                    className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(1.5rem,4vw,2rem)] p-0 text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none"
-                    title="Decrease seconds"
-                  >
-                    <svg className="w-[clamp(0.5rem,1.5vw,0.75rem)] h-[clamp(0.5rem,1.5vw,0.75rem)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                      <path d="M6 9l6 6 6-6"/>
-                    </svg>
-                  </Button>
-                </div>
+                <input
+                  type="number"
+                  min={0}
+                  max={59}
+                  value={state.gameClockSeconds}
+                  onChange={(e) => {
+                    const raw = e.target.value;
+                    const num = Number(raw.replace(/[^0-9]/g, ''));
+                    const seconds = Math.max(0, Math.min(59, isNaN(num) ? 0 : num));
+                    updateState({ gameClockSeconds: seconds });
+                  }}
+                  className="h-[clamp(1.5rem,4vw,2rem)] w-[clamp(3rem,8vw,4rem)] text-center text-white bg-black border border-white rounded focus:outline-none focus:ring-2 focus:ring-yellow-500 text-[clamp(0.75rem,2vw,1rem)]"
+                />
               </div>
             </div>
             <div className="flex items-center justify-center gap-1 sm:gap-2 mt-1 sm:mt-2">
@@ -346,7 +326,15 @@ export function Scoreboard() {
             <div className="mb-2 sm:mb-3 md:mb-4">
               <div className="text-[clamp(0.625rem,1.5vw,0.75rem)] text-white mb-1 sm:mb-2 uppercase font-bold">Shot Clock</div>
               <div className={`border-2 border-white bg-black px-2 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-3 mb-1 sm:mb-2 w-full max-w-[420px] ${!state.shotClockEnabled ? 'opacity-50' : ''}`}>
-                <div className={`text-[clamp(2rem,6vw,5.5rem)] font-black clock-font text-center leading-none ${state.shotClockEnabled ? 'text-yellow-500' : 'text-gray-500'}`}>
+                <div
+                  className={`text-[clamp(2rem,6vw,5.5rem)] font-black clock-font text-center leading-none ${
+                    state.shotClockEnabled
+                      ? isShotClockWarning
+                        ? 'text-red-500'
+                        : 'text-yellow-500'
+                      : 'text-gray-500'
+                  }`}
+                >
                   {state.shotClockEnabled ? formatShotClock() : '--'}
                 </div>
               </div>
