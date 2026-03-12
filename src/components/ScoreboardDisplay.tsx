@@ -9,8 +9,16 @@ export function ScoreboardDisplay() {
 
   const isShotClockWarning = state.shotClockEnabled && state.shotClockSeconds <= 10;
 
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center p-1 sm:p-2 md:p-4" style={{ backgroundColor: '#141414' }}>
+    <div className="min-h-screen flex flex-col items-center justify-between p-1 sm:p-2 md:p-4" style={{ backgroundColor: '#141414' }}>
       <div className="w-full max-w-7xl rounded-lg p-1 sm:p-2 md:p-4 lg:p-6" style={{ backgroundColor: '#141414' }}>
         {/* Top Section: Clock */}
         <div className="flex justify-center mb-2 sm:mb-4 md:mb-6">
@@ -120,6 +128,13 @@ export function ScoreboardDisplay() {
           </div>
         </div>
       </div>
+      <button
+        onClick={toggleFullscreen}
+        className="mt-2 mb-1 text-gray-500 hover:text-gray-300 text-xs sm:text-sm focus:outline-none transition-colors opacity-60 hover:opacity-100"
+        title="Toggle fullscreen"
+      >
+        ⛶
+      </button>
     </div>
   );
 }
