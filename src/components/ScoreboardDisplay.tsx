@@ -1,4 +1,5 @@
 import { useGameState } from '../hooks/useGameState';
+import { useBackgroundCustomization } from '../hooks/useBackgroundCustomization';
 
 export function ScoreboardDisplay() {
   const {
@@ -6,6 +7,7 @@ export function ScoreboardDisplay() {
     formatGameClock,
     formatShotClock,
   } = useGameState();
+  const { outerStyle, innerStyle } = useBackgroundCustomization();
 
   const isShotClockWarning = state.shotClockEnabled && state.shotClockSeconds <= 10;
 
@@ -18,8 +20,8 @@ export function ScoreboardDisplay() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-between p-1 sm:p-2 md:p-4" style={{ backgroundColor: '#141414' }}>
-      <div className="w-full max-w-7xl rounded-lg p-1 sm:p-2 md:p-4 lg:p-6" style={{ backgroundColor: '#141414' }}>
+    <div className="w-screen min-h-screen flex flex-col items-center justify-between p-1 sm:p-2 md:p-4" style={outerStyle}>
+      <div className="w-full max-w-7xl rounded-lg p-1 sm:p-2 md:p-4 lg:p-6" style={innerStyle}>
         {/* Top Section: Clock */}
         <div className="flex justify-center mb-2 sm:mb-4 md:mb-6">
           <div className="flex flex-col items-center justify-center w-full">
