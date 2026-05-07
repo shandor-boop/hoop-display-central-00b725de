@@ -38,7 +38,9 @@ export function sectionScaleStyle(percent: number): React.CSSProperties {
 }
 
 const LEGACY_STORAGE_KEY = "hdc.backgroundCustomization.v1";
-const STORAGE_KEY = "hdc.displayCustomization.v1";
+const STORAGE_KEY_SHARED_V1 = "hdc.displayCustomization.v1";
+const STORAGE_KEY_DISPLAY = "hdc.displayCustomization.display.v1";
+const STORAGE_KEY_CONTROL = "hdc.displayCustomization.control.v1";
 const DEFAULT_BG = "#141414";
 
 export const SCALE_MIN = 70;
@@ -184,9 +186,39 @@ function parseDisplayCustomization(raw: string | null): DisplayCustomization | n
   }
 }
 
-function loadInitial(): DisplayCustomization {
-  const merged = parseDisplayCustomization(localStorage.getItem(STORAGE_KEY));
-  if (merged) return merged;
+function getIsDisplayMode() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get("display") === "true";
+  } catch {
+    return false;
+  }
+}
+
+function loadInitial(isDisplayMode: boolean): DisplayCustomization {
+  const primaryKey = isDisplayMode ? STORAGE_KEY_DISPLAY : STORAGE_KEY_CONTROL;
+
+  const primary = parseDisplayCustomization(localStorage.getItem(primaryKey));
+  if (primary) return primary;
+
+  const shared = parseDisplayCustomization(localStorage.getItem(STORAGE_KEY_SHARED_V1));
+  if (shared) {
+    // Keep split-view looking the same after this change.
+    if (isDisplayMode) return shared;
+
+    // Keep control view usable: inherit background, but reset sizing.
+    return {
+      ...shared,
+      displayScalePercent: DEFAULTS.displayScalePercent,
+      topOffsetPx: DEFAULTS.topOffsetPx,
+      timerScalePercent: DEFAULTS.timerScalePercent,
+      scoresScalePercent: DEFAULTS.scoresScalePercent,
+      shotClockScalePercent: DEFAULTS.shotClockScalePercent,
+      foulsScalePercent: DEFAULTS.foulsScalePercent,
+      timeoutsScalePercent: DEFAULTS.timeoutsScalePercent,
+    };
+  }
+
   const legacy = parseLegacyBackground(localStorage.getItem(LEGACY_STORAGE_KEY));
   if (legacy) {
     return {
@@ -200,26 +232,30 @@ function loadInitial(): DisplayCustomization {
       timeoutsScalePercent: DEFAULTS.timeoutsScalePercent,
     };
   }
+
   return DEFAULTS;
 }
 
 export function useBackgroundCustomization() {
-  const [customization, setCustomization] = useState<DisplayCustomization>(loadInitial);
+  const isDisplayMode = getIsDisplayMode();
+  const storageKey = isDisplayMode ? STORAGE_KEY_DISPLAY : STORAGE_KEY_CONTROL;
+
+  const [customization, setCustomization] = useState<DisplayCustomization>(() => loadInitial(isDisplayMode));
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(customization));
-  }, [customization]);
+    localStorage.setItem(storageKey, JSON.stringify(customization));
+  }, [customization, storageKey]);
 
   useEffect(() => {
     const onStorage = (e: StorageEvent) => {
-      if (e.key !== STORAGE_KEY) return;
+      if (e.key !== storageKey) return;
       const next = parseDisplayCustomization(e.newValue);
       if (!next) return;
       setCustomization(next);
     };
     window.addEventListener("storage", onStorage);
     return () => window.removeEventListener("storage", onStorage);
-  }, []);
+  }, [storageKey]);
 
   const backgroundOuterStyle = useMemo<React.CSSProperties>(() => {
     if (customization.mode === "image" && customization.imageDataUrl) {

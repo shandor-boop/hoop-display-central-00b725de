@@ -12,6 +12,12 @@ export function ScoreboardDisplay() {
 
   const isShotClockWarning = state.shotClockEnabled && state.shotClockSeconds <= 10;
 
+  const formatPeriodLabel = (period: number) => {
+    if (period <= 4) return String(period);
+    const otNumber = period - 4;
+    return otNumber === 1 ? 'OT' : `OT${otNumber}`;
+  };
+
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen();
@@ -76,7 +82,7 @@ export function ScoreboardDisplay() {
               <div className="text-[clamp(0.625rem,1.5vw,0.875rem)] text-white mb-0.5 sm:mb-1 uppercase font-bold">PERIOD</div>
               <div className="border-2 border-white bg-black px-2 sm:px-3 md:px-4 py-1 sm:py-2 mb-1 sm:mb-2 w-full max-w-[clamp(4.5rem,14vw,8.75rem)] mx-auto">
                 <div className="text-[clamp(1.5rem,5vw,4rem)] font-black clock-font text-yellow-500 text-center leading-none">
-                  {state.period}
+                  {formatPeriodLabel(state.period)}
                 </div>
               </div>
             </div>
@@ -102,19 +108,19 @@ export function ScoreboardDisplay() {
             <div className="mt-2 sm:mt-3 md:mt-4">
               <div className="flex items-center justify-center gap-1 sm:gap-2">
                 <div
-                  className={`w-0 h-0 border-t-[clamp(0.5rem,1.5vw,0.75rem)] border-b-[clamp(0.5rem,1.5vw,0.75rem)] border-r-[clamp(0.8rem,2.5vw,1.25rem)] 
-                    border-t-transparent border-b-transparent transition-all ${
+                  className={`w-0 h-0 border-t-[clamp(1.1rem,3vw,1.75rem)] border-b-[clamp(1.1rem,3vw,1.75rem)] border-r-[clamp(2.25rem,6vw,3.5rem)] 
+                    border-t-transparent border-b-transparent transition-all drop-shadow-[0_0_10px_rgba(250,204,21,0.35)] ${
                     state.possession === 'away'
-                      ? 'border-r-yellow-500 opacity-100'
-                      : 'border-r-white opacity-30'
+                      ? 'border-r-yellow-400 opacity-100'
+                      : 'border-r-white opacity-20'
                   }`}
                 />
                 <div
-                  className={`w-0 h-0 border-t-[clamp(0.5rem,1.5vw,0.75rem)] border-b-[clamp(0.5rem,1.5vw,0.75rem)] border-l-[clamp(0.8rem,2.5vw,1.25rem)] 
-                    border-t-transparent border-b-transparent transition-all ${
+                  className={`w-0 h-0 border-t-[clamp(1.1rem,3vw,1.75rem)] border-b-[clamp(1.1rem,3vw,1.75rem)] border-l-[clamp(2.25rem,6vw,3.5rem)] 
+                    border-t-transparent border-b-transparent transition-all drop-shadow-[0_0_10px_rgba(250,204,21,0.35)] ${
                     state.possession === 'home'
-                      ? 'border-l-yellow-500 opacity-100'
-                      : 'border-l-white opacity-30'
+                      ? 'border-l-yellow-400 opacity-100'
+                      : 'border-l-white opacity-20'
                   }`}
                 />
               </div>
