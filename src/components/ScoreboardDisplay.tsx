@@ -1,5 +1,6 @@
 import { useGameState } from '../hooks/useGameState';
-import { useBackgroundCustomization } from '../hooks/useBackgroundCustomization';
+import { useBackgroundCustomization, sectionScaleStyle } from '../hooks/useBackgroundCustomization';
+import { BackgroundCustomizer } from './BackgroundCustomizer';
 
 export function ScoreboardDisplay() {
   const {
@@ -7,7 +8,7 @@ export function ScoreboardDisplay() {
     formatGameClock,
     formatShotClock,
   } = useGameState();
-  const { outerStyle, innerStyle } = useBackgroundCustomization();
+  const { outerStyle, innerStyle, customization } = useBackgroundCustomization();
 
   const isShotClockWarning = state.shotClockEnabled && state.shotClockSeconds <= 10;
 
@@ -20,11 +21,15 @@ export function ScoreboardDisplay() {
   };
 
   return (
-    <div className="w-screen min-h-screen flex flex-col items-center justify-between p-1 sm:p-2 md:p-4" style={outerStyle}>
+    <>
+      <div className="w-screen min-h-screen flex flex-col items-center justify-between p-1 sm:p-2 md:p-4" style={outerStyle}>
       <div className="w-full max-w-7xl rounded-lg p-1 sm:p-2 md:p-4 lg:p-6" style={innerStyle}>
         {/* Top Section: Clock */}
         <div className="flex justify-center mb-2 sm:mb-4 md:mb-6">
-          <div className="flex flex-col items-center justify-center w-full">
+          <div
+            className="flex flex-col items-center justify-center w-full"
+            style={sectionScaleStyle(customization.timerScalePercent)}
+          >
             <div className="border-2 border-white bg-black px-2 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-3 mb-2 w-full max-w-[420px]">
               <div className="text-[clamp(2rem,6vw,5.5rem)] font-black clock-font text-yellow-500 text-center leading-none">
                 {formatGameClock()}
@@ -37,23 +42,30 @@ export function ScoreboardDisplay() {
         <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-2 sm:mb-4 md:mb-6">
           {/* Left: Home Score and Fouls */}
           <div className="text-center flex flex-col items-center">
-            <div className="text-[clamp(1rem,3vw,1.875rem)] font-bold text-white uppercase mb-1 sm:mb-2 w-full">
-              {state.home.name}
-            </div>
-            <div className="border-2 border-white bg-black px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-3 mb-2 sm:mb-3 md:mb-4 w-full">
-              <div className="text-[clamp(2.5rem,8vw,8rem)] font-black clock-font text-red-500 text-center leading-none">
-                {state.home.score}
+            <div
+              className="flex flex-col items-center w-full"
+              style={sectionScaleStyle(customization.scoresScalePercent)}
+            >
+              <div className="text-[clamp(1rem,3vw,1.875rem)] font-bold text-white uppercase mb-1 sm:mb-2 w-full">
+                {state.home.name}
+              </div>
+              <div className="border-2 border-white bg-black px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-3 mb-2 sm:mb-3 md:mb-4 w-full">
+                <div className="text-[clamp(2.5rem,8vw,8rem)] font-black clock-font text-red-500 text-center leading-none">
+                  {state.home.score}
+                </div>
               </div>
             </div>
-            <div className="mb-1 sm:mb-2">
-              <div className="text-[clamp(0.625rem,1.5vw,0.875rem)] text-white mb-0.5 sm:mb-1 uppercase font-bold">FOULS</div>
-              <div className="inline-flex items-center justify-center">
+            <div className="mb-1 sm:mb-2 w-full flex flex-col items-center" style={sectionScaleStyle(customization.foulsScalePercent)}>
+              <div className="text-[clamp(0.625rem,1.5vw,0.875rem)] text-white mb-0.5 sm:mb-1 uppercase font-bold w-full text-center">
+                FOULS
+              </div>
+              <div className="flex w-full justify-center items-center">
                 <div className="bg-black border-2 border-white text-orange-500 text-[clamp(1.25rem,3vw,1.5rem)] font-black clock-font px-2 sm:px-3 md:px-4 py-0.5 sm:py-1 md:py-2 min-w-[clamp(2.5rem,6vw,3.75rem)] text-center">
                   {state.home.fouls}
                 </div>
               </div>
             </div>
-            <div className="mt-1 sm:mt-2">
+            <div className="mt-1 sm:mt-2 w-full flex flex-col items-center" style={sectionScaleStyle(customization.timeoutsScalePercent)}>
               <div className="text-[clamp(0.625rem,1.5vw,0.75rem)] text-white mb-0.5 sm:mb-1 font-bold">Timeouts: {state.home.timeouts}</div>
             </div>
           </div>
@@ -68,7 +80,10 @@ export function ScoreboardDisplay() {
                 </div>
               </div>
             </div>
-            <div className="mb-2 sm:mb-3 md:mb-4">
+            <div
+              className="mb-2 sm:mb-3 md:mb-4 w-full flex flex-col items-center"
+              style={sectionScaleStyle(customization.shotClockScalePercent)}
+            >
               <div className="text-[clamp(0.625rem,1.5vw,0.75rem)] text-white mb-1 sm:mb-2 uppercase font-bold">Shot Clock</div>
               <div className={`border-2 border-white bg-black px-2 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-3 mb-1 sm:mb-2 w-full max-w-[420px] ${!state.shotClockEnabled ? 'opacity-50' : ''}`}>
                 <div
@@ -108,23 +123,30 @@ export function ScoreboardDisplay() {
 
           {/* Right: Away Score and Fouls */}
           <div className="text-center flex flex-col items-center">
-            <div className="text-[clamp(1rem,3vw,1.875rem)] font-bold text-white uppercase mb-1 sm:mb-2 w-full">
-              {state.away.name}
-            </div>
-            <div className="border-2 border-white bg-black px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-3 mb-2 sm:mb-3 md:mb-4 w-full">
-              <div className="text-[clamp(2.5rem,8vw,8rem)] font-black clock-font text-red-500 text-center leading-none">
-                {state.away.score}
+            <div
+              className="flex flex-col items-center w-full"
+              style={sectionScaleStyle(customization.scoresScalePercent)}
+            >
+              <div className="text-[clamp(1rem,3vw,1.875rem)] font-bold text-white uppercase mb-1 sm:mb-2 w-full">
+                {state.away.name}
+              </div>
+              <div className="border-2 border-white bg-black px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-3 mb-2 sm:mb-3 md:mb-4 w-full">
+                <div className="text-[clamp(2.5rem,8vw,8rem)] font-black clock-font text-red-500 text-center leading-none">
+                  {state.away.score}
+                </div>
               </div>
             </div>
-            <div className="mb-1 sm:mb-2">
-              <div className="text-[clamp(0.625rem,1.5vw,0.875rem)] text-white mb-0.5 sm:mb-1 uppercase font-bold">FOULS</div>
-              <div className="inline-flex items-center justify-center">
+            <div className="mb-1 sm:mb-2 w-full flex flex-col items-center" style={sectionScaleStyle(customization.foulsScalePercent)}>
+              <div className="text-[clamp(0.625rem,1.5vw,0.875rem)] text-white mb-0.5 sm:mb-1 uppercase font-bold w-full text-center">
+                FOULS
+              </div>
+              <div className="flex w-full justify-center items-center">
                 <div className="bg-black border-2 border-white text-orange-500 text-[clamp(1.25rem,3vw,1.5rem)] font-black clock-font px-2 sm:px-3 md:px-4 py-0.5 sm:py-1 md:py-2 min-w-[clamp(2.5rem,6vw,3.75rem)] text-center">
                   {state.away.fouls}
                 </div>
               </div>
             </div>
-            <div className="mt-1 sm:mt-2">
+            <div className="mt-1 sm:mt-2 w-full flex flex-col items-center" style={sectionScaleStyle(customization.timeoutsScalePercent)}>
               <div className="text-[clamp(0.625rem,1.5vw,0.75rem)] text-white mb-0.5 sm:mb-1 font-bold">Timeouts: {state.away.timeouts}</div>
             </div>
           </div>
@@ -138,6 +160,8 @@ export function ScoreboardDisplay() {
         ⛶
       </button>
     </div>
+      <BackgroundCustomizer />
+    </>
   );
 }
 

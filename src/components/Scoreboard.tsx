@@ -3,7 +3,7 @@ import { useGameState } from '../hooks/useGameState';
 import { Button } from './Button';
 import { playGameClockBuzzer, playShotClockBuzzer } from '../utils/buzzer';
 import { BackgroundCustomizer } from './BackgroundCustomizer';
-import { useBackgroundCustomization } from '../hooks/useBackgroundCustomization';
+import { useBackgroundCustomization, sectionScaleStyle } from '../hooks/useBackgroundCustomization';
 
 export function Scoreboard() {
   const {
@@ -137,15 +137,18 @@ export function Scoreboard() {
   };
 
   const isShotClockWarning = state.shotClockEnabled && state.shotClockSeconds <= 10;
-  const { outerStyle, innerStyle } = useBackgroundCustomization();
+  const { outerStyle, innerStyle, customization } = useBackgroundCustomization();
 
   return (
-    <div className="w-screen min-h-screen flex items-center justify-center p-1 sm:p-2 md:p-4" style={outerStyle}>
+    <>
+      <div className="w-screen min-h-screen flex items-start justify-center p-1 sm:p-2 md:p-4" style={outerStyle}>
       <div className="w-full max-w-7xl rounded-lg p-1 sm:p-2 md:p-4 lg:p-6" style={innerStyle}>
-        <BackgroundCustomizer />
         {/* Top Section: Clock */}
         <div className="flex justify-center mb-2 sm:mb-4 md:mb-6">
-          <div className="flex flex-col items-center justify-center w-full">
+          <div
+            className="flex flex-col items-center justify-center w-full"
+            style={sectionScaleStyle(customization.timerScalePercent)}
+          >
             <div className="border-2 border-white bg-black px-2 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-3 mb-2 w-full max-w-[420px]">
               <div className="text-[clamp(2rem,6vw,5.5rem)] font-black clock-font text-yellow-500 text-center leading-none">
                 {formatGameClock()}
@@ -211,35 +214,42 @@ export function Scoreboard() {
         <div className="grid grid-cols-3 gap-2 sm:gap-3 md:gap-4 lg:gap-6 mb-2 sm:mb-4 md:mb-6">
           {/* Left: Home Score and Fouls */}
           <div className="text-center flex flex-col items-center">
-            <input
-              type="text"
-              value={state.home.name}
-              onChange={(e) => updateTeam('home', { name: e.target.value })}
-              className="text-[clamp(1rem,3vw,1.875rem)] font-bold text-white bg-transparent border-none text-center focus:outline-none focus:ring-2 focus:ring-yellow-500 rounded px-1 sm:px-2 cursor-text uppercase mb-1 sm:mb-2 w-full hover:bg-gray-800/30 hover:underline transition-all"
-              placeholder="HOME"
-            />
-            <div className="border-2 border-white bg-black px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-3 mb-2 sm:mb-3 md:mb-4 w-full">
-              <div className="text-[clamp(2.5rem,8vw,8rem)] font-black clock-font text-red-500 text-center leading-none">
-                {state.home.score}
+            <div
+              className="flex flex-col items-center w-full"
+              style={sectionScaleStyle(customization.scoresScalePercent)}
+            >
+              <input
+                type="text"
+                value={state.home.name}
+                onChange={(e) => updateTeam('home', { name: e.target.value })}
+                className="text-[clamp(1rem,3vw,1.875rem)] font-bold text-white bg-transparent border-none text-center focus:outline-none focus:ring-2 focus:ring-yellow-500 rounded px-1 sm:px-2 cursor-text uppercase mb-1 sm:mb-2 w-full hover:bg-gray-800/30 hover:underline transition-all"
+                placeholder="HOME"
+              />
+              <div className="border-2 border-white bg-black px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-3 mb-2 sm:mb-3 md:mb-4 w-full">
+                <div className="text-[clamp(2.5rem,8vw,8rem)] font-black clock-font text-red-500 text-center leading-none">
+                  {state.home.score}
+                </div>
+              </div>
+              <div className="flex justify-center gap-0.5 sm:gap-1 md:gap-2 mb-2 sm:mb-3 md:mb-4">
+                <Button variant="outline" size="sm" onClick={() => adjustScore('home', 1)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
+                  +1
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => adjustScore('home', 2)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
+                  +2
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => adjustScore('home', 3)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
+                  +3
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => adjustScore('home', -1)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
+                  -1
+                </Button>
               </div>
             </div>
-            <div className="flex justify-center gap-0.5 sm:gap-1 md:gap-2 mb-2 sm:mb-3 md:mb-4">
-              <Button variant="outline" size="sm" onClick={() => adjustScore('home', 1)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
-                +1
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => adjustScore('home', 2)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
-                +2
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => adjustScore('home', 3)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
-                +3
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => adjustScore('home', -1)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
-                -1
-              </Button>
-            </div>
-            <div className="mb-1 sm:mb-2">
-              <div className="text-[clamp(0.625rem,1.5vw,0.875rem)] text-white mb-0.5 sm:mb-1 uppercase font-bold">FOULS</div>
-              <div className="inline-flex items-center justify-center">
+            <div className="mb-1 sm:mb-2 w-full flex flex-col items-center" style={sectionScaleStyle(customization.foulsScalePercent)}>
+              <div className="text-[clamp(0.625rem,1.5vw,0.875rem)] text-white mb-0.5 sm:mb-1 uppercase font-bold w-full text-center">
+                FOULS
+              </div>
+              <div className="flex w-full justify-center items-center">
                 <div className="bg-black border-2 border-white text-orange-500 text-[clamp(1.25rem,3vw,1.5rem)] font-black clock-font px-2 sm:px-3 md:px-4 py-0.5 sm:py-1 md:py-2 min-w-[clamp(2.5rem,6vw,3.75rem)] text-center">
                   {state.home.fouls}
                 </div>
@@ -267,7 +277,7 @@ export function Scoreboard() {
                 </div>
               </div>
             </div>
-            <div className="mt-1 sm:mt-2">
+            <div className="mt-1 sm:mt-2 w-full flex flex-col items-center" style={sectionScaleStyle(customization.timeoutsScalePercent)}>
               <div className="text-[clamp(0.625rem,1.5vw,0.75rem)] text-white mb-0.5 sm:mb-1 font-bold">Timeouts: {state.home.timeouts}</div>
               <div className="flex gap-0.5 sm:gap-1 justify-center">
                 <Button
@@ -326,7 +336,10 @@ export function Scoreboard() {
                 </Button>
               </div>
             </div>
-            <div className="mb-2 sm:mb-3 md:mb-4">
+            <div
+              className="mb-2 sm:mb-3 md:mb-4 w-full flex flex-col items-center"
+              style={sectionScaleStyle(customization.shotClockScalePercent)}
+            >
               <div className="text-[clamp(0.625rem,1.5vw,0.75rem)] text-white mb-1 sm:mb-2 uppercase font-bold">Shot Clock</div>
               <div className={`border-2 border-white bg-black px-2 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-3 mb-1 sm:mb-2 w-full max-w-[420px] ${!state.shotClockEnabled ? 'opacity-50' : ''}`}>
                 <div
@@ -492,35 +505,42 @@ export function Scoreboard() {
 
           {/* Right: Away Score and Fouls */}
           <div className="text-center flex flex-col items-center">
-            <input
-              type="text"
-              value={state.away.name}
-              onChange={(e) => updateTeam('away', { name: e.target.value })}
-              className="text-[clamp(1rem,3vw,1.875rem)] font-bold text-white bg-transparent border-none text-center focus:outline-none focus:ring-2 focus:ring-yellow-500 rounded px-1 sm:px-2 cursor-text uppercase mb-1 sm:mb-2 w-full hover:bg-gray-800/30 hover:underline transition-all"
-              placeholder="AWAY"
-            />
-            <div className="border-2 border-white bg-black px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-3 mb-2 sm:mb-3 md:mb-4 w-full">
-              <div className="text-[clamp(2.5rem,8vw,8rem)] font-black clock-font text-red-500 text-center leading-none">
-                {state.away.score}
+            <div
+              className="flex flex-col items-center w-full"
+              style={sectionScaleStyle(customization.scoresScalePercent)}
+            >
+              <input
+                type="text"
+                value={state.away.name}
+                onChange={(e) => updateTeam('away', { name: e.target.value })}
+                className="text-[clamp(1rem,3vw,1.875rem)] font-bold text-white bg-transparent border-none text-center focus:outline-none focus:ring-2 focus:ring-yellow-500 rounded px-1 sm:px-2 cursor-text uppercase mb-1 sm:mb-2 w-full hover:bg-gray-800/30 hover:underline transition-all"
+                placeholder="AWAY"
+              />
+              <div className="border-2 border-white bg-black px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-3 mb-2 sm:mb-3 md:mb-4 w-full">
+                <div className="text-[clamp(2.5rem,8vw,8rem)] font-black clock-font text-red-500 text-center leading-none">
+                  {state.away.score}
+                </div>
+              </div>
+              <div className="flex justify-center gap-0.5 sm:gap-1 md:gap-2 mb-2 sm:mb-3 md:mb-4">
+                <Button variant="outline" size="sm" onClick={() => adjustScore('away', 1)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
+                  +1
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => adjustScore('away', 2)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
+                  +2
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => adjustScore('away', 3)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
+                  +3
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => adjustScore('away', -1)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
+                  -1
+                </Button>
               </div>
             </div>
-            <div className="flex justify-center gap-0.5 sm:gap-1 md:gap-2 mb-2 sm:mb-3 md:mb-4">
-              <Button variant="outline" size="sm" onClick={() => adjustScore('away', 1)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
-                +1
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => adjustScore('away', 2)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
-                +2
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => adjustScore('away', 3)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
-                +3
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => adjustScore('away', -1)} className="text-white border-white hover:bg-gray-700 hover:text-gray-200 focus:outline-none text-[clamp(0.625rem,1.5vw,0.875rem)] px-1 sm:px-2 md:px-3 py-0.5 sm:py-1">
-                -1
-              </Button>
-            </div>
-            <div className="mb-1 sm:mb-2">
-              <div className="text-[clamp(0.625rem,1.5vw,0.875rem)] text-white mb-0.5 sm:mb-1 uppercase font-bold">FOULS</div>
-              <div className="inline-flex items-center justify-center">
+            <div className="mb-1 sm:mb-2 w-full flex flex-col items-center" style={sectionScaleStyle(customization.foulsScalePercent)}>
+              <div className="text-[clamp(0.625rem,1.5vw,0.875rem)] text-white mb-0.5 sm:mb-1 uppercase font-bold w-full text-center">
+                FOULS
+              </div>
+              <div className="flex w-full justify-center items-center">
                 <div className="bg-black border-2 border-white text-orange-500 text-[clamp(1.25rem,3vw,1.5rem)] font-black clock-font px-2 sm:px-3 md:px-4 py-0.5 sm:py-1 md:py-2 min-w-[clamp(2.5rem,6vw,3.75rem)] text-center">
                   {state.away.fouls}
                 </div>
@@ -548,7 +568,7 @@ export function Scoreboard() {
                 </div>
               </div>
             </div>
-            <div className="mt-1 sm:mt-2">
+            <div className="mt-1 sm:mt-2 w-full flex flex-col items-center" style={sectionScaleStyle(customization.timeoutsScalePercent)}>
               <div className="text-[clamp(0.625rem,1.5vw,0.75rem)] text-white mb-0.5 sm:mb-1 font-bold">Timeouts: {state.away.timeouts}</div>
               <div className="flex gap-0.5 sm:gap-1 justify-center">
                 <Button
@@ -603,5 +623,7 @@ export function Scoreboard() {
         </div>
       </div>
     </div>
+      <BackgroundCustomizer />
+    </>
   );
 }
