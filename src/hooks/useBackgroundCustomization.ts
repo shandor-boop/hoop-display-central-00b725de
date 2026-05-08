@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ensureDarkBackground, hexToRgbaCss } from "../utils/colors";
+import { ensureDarkBackground, hexToRgbaCss, normalizeHexColor } from "../utils/colors";
 
 type BackgroundMode = "color" | "image";
 
@@ -9,6 +9,22 @@ export type SectionScaleKey =
   | "shotClockScalePercent"
   | "foulsScalePercent"
   | "timeoutsScalePercent";
+
+export const TEXT_COLOR_KEYS = [
+  "clockTextColor",
+  "homeScoreTextColor",
+  "awayScoreTextColor",
+  "periodTextColor",
+  "shotClockTextColor",
+  "homeFoulsTextColor",
+  "awayFoulsTextColor",
+] as const;
+
+export type TextColorKey = (typeof TEXT_COLOR_KEYS)[number];
+
+/** Tailwind defaults: yellow-500, red-500, orange-500; gray-500 when shot clock off. */
+export const SHOT_CLOCK_WARNING_HEX = "#ef4444";
+export const SHOT_CLOCK_DISABLED_HEX = "#6b7280";
 
 export type DisplayCustomization = {
   mode: BackgroundMode;
@@ -26,6 +42,13 @@ export type DisplayCustomization = {
   shotClockScalePercent: number;
   foulsScalePercent: number;
   timeoutsScalePercent: number;
+  clockTextColor: string;
+  homeScoreTextColor: string;
+  awayScoreTextColor: string;
+  periodTextColor: string;
+  shotClockTextColor: string;
+  homeFoulsTextColor: string;
+  awayFoulsTextColor: string;
 };
 
 /**
@@ -64,6 +87,13 @@ const DEFAULTS: DisplayCustomization = {
   shotClockScalePercent: 100,
   foulsScalePercent: 100,
   timeoutsScalePercent: 100,
+  clockTextColor: "#eab308",
+  homeScoreTextColor: "#ef4444",
+  awayScoreTextColor: "#ef4444",
+  periodTextColor: "#eab308",
+  shotClockTextColor: "#eab308",
+  homeFoulsTextColor: "#f97316",
+  awayFoulsTextColor: "#f97316",
 };
 
 function clampScale(n: number) {
@@ -81,6 +111,7 @@ function parseLegacyBackground(raw: string | null): Omit<
   | "displayScalePercent"
   | "topOffsetPx"
   | SectionScaleKey
+  | TextColorKey
 > | null {
   if (!raw) return null;
   try {
@@ -139,6 +170,15 @@ function parseLegacyBackground(raw: string | null): Omit<
   }
 }
 
+function pickTextColors(parsed: Partial<DisplayCustomization>): Record<TextColorKey, string> {
+  const out = {} as Record<TextColorKey, string>;
+  for (const key of TEXT_COLOR_KEYS) {
+    const raw = parsed[key];
+    out[key] = normalizeHexColor(typeof raw === "string" ? raw : "", DEFAULTS[key]);
+  }
+  return out;
+}
+
 function parseDisplayCustomization(raw: string | null): DisplayCustomization | null {
   if (!raw) return null;
   try {
@@ -180,6 +220,7 @@ function parseDisplayCustomization(raw: string | null): DisplayCustomization | n
       shotClockScalePercent,
       foulsScalePercent,
       timeoutsScalePercent,
+      ...pickTextColors(parsed),
     };
   } catch {
     return null;
@@ -230,6 +271,7 @@ function loadInitial(isDisplayMode: boolean): DisplayCustomization {
       shotClockScalePercent: DEFAULTS.shotClockScalePercent,
       foulsScalePercent: DEFAULTS.foulsScalePercent,
       timeoutsScalePercent: DEFAULTS.timeoutsScalePercent,
+      ...pickTextColors({}),
     };
   }
 
@@ -339,6 +381,11 @@ export function useBackgroundCustomization() {
       setCustomization((c) => ({
         ...c,
         [key]: clampScale(c[key] + deltaPercent),
+      })),
+    setTextColor: (key: TextColorKey, value: string) =>
+      setCustomization((c) => ({
+        ...c,
+        [key]: normalizeHexColor(value, DEFAULTS[key]),
       })),
   };
 }

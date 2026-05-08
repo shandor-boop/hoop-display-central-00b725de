@@ -1,6 +1,7 @@
 import { useId, useRef, useState } from "react";
 import {
   useBackgroundCustomization,
+  type TextColorKey,
   OFFSET_MAX,
   OFFSET_MIN,
   OFFSET_STEP,
@@ -13,7 +14,7 @@ type Props = {
   className?: string;
 };
 
-type CustomizeTab = "resize" | "background" | "height";
+type CustomizeTab = "resize" | "background" | "height" | "text";
 
 const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 const MAX_DIMENSION = 1920;
@@ -87,6 +88,49 @@ function SectionScaleRow({
   );
 }
 
+function TextColorRow({
+  label,
+  colorId,
+  value,
+  onChange,
+}: {
+  label: string;
+  colorId: string;
+  value: string;
+  onChange: (hex: string) => void;
+}) {
+  return (
+    <div className="flex items-center gap-2 min-w-0">
+      <span className="text-gray-200 text-[10px] font-semibold leading-tight shrink-0 w-[5.5rem]">{label}</span>
+      <input
+        id={colorId}
+        type="color"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="h-7 w-8 rounded border border-white/15 bg-transparent p-0 shrink-0"
+        aria-label={`${label} colour`}
+      />
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="flex-1 min-w-0 h-7 rounded bg-black/40 border border-white/10 text-gray-100 px-1.5 text-[11px] focus:outline-none focus:ring-2 focus:ring-yellow-500 font-mono"
+        spellCheck={false}
+      />
+    </div>
+  );
+}
+
+const TEXT_COLOR_ROWS: { key: TextColorKey; label: string }[] = [
+  { key: "clockTextColor", label: "Clock" },
+  { key: "homeScoreTextColor", label: "Home Score" },
+  { key: "awayScoreTextColor", label: "Away Score" },
+  { key: "periodTextColor", label: "Period" },
+  { key: "shotClockTextColor", label: "Shot Clock" },
+  { key: "homeFoulsTextColor", label: "Home Fouls" },
+  { key: "awayFoulsTextColor", label: "Away Fouls" },
+];
+
 export function BackgroundCustomizer({ className = "" }: Props) {
   const {
     customization,
@@ -100,6 +144,7 @@ export function BackgroundCustomizer({ className = "" }: Props) {
     adjustDisplayScale,
     adjustTopOffset,
     adjustSectionScale,
+    setTextColor,
   } = useBackgroundCustomization();
   const [open, setOpen] = useState(false);
   const [tab, setTab] = useState<CustomizeTab>("resize");
@@ -133,7 +178,7 @@ export function BackgroundCustomizer({ className = "" }: Props) {
       </button>
 
       {open && (
-        <div className="mt-2 w-[min(100vw-1rem,320px)] max-h-[min(85vh,520px)] overflow-y-auto rounded-lg border border-white/10 bg-black/70 backdrop-blur-sm p-3 text-left shadow-xl">
+        <div className="mt-2 w-[min(100vw-1rem,320px)] max-h-[min(85vh,620px)] overflow-y-auto rounded-lg border border-white/10 bg-black/70 backdrop-blur-sm p-3 text-left shadow-xl">
           <div className="flex items-center justify-between mb-2">
             <div className="text-white text-sm font-semibold">Customize</div>
             <button
@@ -146,10 +191,11 @@ export function BackgroundCustomizer({ className = "" }: Props) {
             </button>
           </div>
 
-          <div className="flex gap-1 mb-3">
+          <div className="grid grid-cols-2 gap-1 mb-3">
             {tabBtn("resize", "Resize")}
             {tabBtn("background", "Background")}
             {tabBtn("height", "Height")}
+            {tabBtn("text", "Colours")}
           </div>
 
           {tab === "resize" && (
@@ -247,6 +293,26 @@ export function BackgroundCustomizer({ className = "" }: Props) {
                     ▼
                   </button>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {tab === "text" && (
+            <div className="space-y-2">
+              <p className="text-[11px] text-gray-400 leading-snug">
+                Scoreboard number colours (defaults match the original theme). ≤10s shot clock still uses red for
+                warning. Reset all restores these defaults.
+              </p>
+              <div className="space-y-2.5">
+                {TEXT_COLOR_ROWS.map((row) => (
+                  <TextColorRow
+                    key={row.key}
+                    label={row.label}
+                    colorId={`hdc-text-${row.key}`}
+                    value={customization[row.key]}
+                    onChange={(hex) => setTextColor(row.key, hex)}
+                  />
+                ))}
               </div>
             </div>
           )}

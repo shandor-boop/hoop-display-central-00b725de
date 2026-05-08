@@ -1,5 +1,10 @@
 import { useGameState } from '../hooks/useGameState';
-import { useBackgroundCustomization, sectionScaleStyle } from '../hooks/useBackgroundCustomization';
+import {
+  useBackgroundCustomization,
+  sectionScaleStyle,
+  SHOT_CLOCK_WARNING_HEX,
+  SHOT_CLOCK_DISABLED_HEX,
+} from '../hooks/useBackgroundCustomization';
 import { BackgroundCustomizer } from './BackgroundCustomizer';
 
 export function ScoreboardDisplay() {
@@ -37,7 +42,10 @@ export function ScoreboardDisplay() {
             style={sectionScaleStyle(customization.timerScalePercent)}
           >
             <div className="border-2 border-white bg-black px-2 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-3 mb-2 w-full max-w-[420px]">
-              <div className="text-[clamp(2rem,6vw,5.5rem)] font-black clock-font text-yellow-500 text-center leading-none">
+              <div
+                className="text-[clamp(2rem,6vw,5.5rem)] font-black clock-font text-center leading-none"
+                style={{ color: customization.clockTextColor }}
+              >
                 {formatGameClock()}
               </div>
             </div>
@@ -56,7 +64,10 @@ export function ScoreboardDisplay() {
                 {state.home.name}
               </div>
               <div className="border-2 border-white bg-black px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-3 mb-2 sm:mb-3 md:mb-4 w-full">
-                <div className="text-[clamp(2.5rem,8vw,8rem)] font-black clock-font text-red-500 text-center leading-none">
+                <div
+                  className="text-[clamp(2.5rem,8vw,8rem)] font-black clock-font text-center leading-none"
+                  style={{ color: customization.homeScoreTextColor }}
+                >
                   {state.home.score}
                 </div>
               </div>
@@ -66,7 +77,10 @@ export function ScoreboardDisplay() {
                 FOULS
               </div>
               <div className="flex w-full justify-center items-center">
-                <div className="bg-black border-2 border-white text-orange-500 text-[clamp(1.25rem,3vw,1.5rem)] font-black clock-font px-2 sm:px-3 md:px-4 py-0.5 sm:py-1 md:py-2 min-w-[clamp(2.5rem,6vw,3.75rem)] text-center">
+                <div
+                  className="bg-black border-2 border-white text-[clamp(1.25rem,3vw,1.5rem)] font-black clock-font px-2 sm:px-3 md:px-4 py-0.5 sm:py-1 md:py-2 min-w-[clamp(2.5rem,6vw,3.75rem)] text-center"
+                  style={{ color: customization.homeFoulsTextColor }}
+                >
                   {state.home.fouls}
                 </div>
               </div>
@@ -81,7 +95,10 @@ export function ScoreboardDisplay() {
             <div className="mb-2 sm:mb-3 md:mb-4">
               <div className="text-[clamp(0.625rem,1.5vw,0.875rem)] text-white mb-0.5 sm:mb-1 uppercase font-bold">PERIOD</div>
               <div className="border-2 border-white bg-black px-2 sm:px-3 md:px-4 py-1 sm:py-2 mb-1 sm:mb-2 w-full max-w-[clamp(4.5rem,14vw,8.75rem)] mx-auto">
-                <div className="text-[clamp(1.5rem,5vw,4rem)] font-black clock-font text-yellow-500 text-center leading-none">
+                <div
+                  className="text-[clamp(1.5rem,5vw,4rem)] font-black clock-font text-center leading-none"
+                  style={{ color: customization.periodTextColor }}
+                >
                   {formatPeriodLabel(state.period)}
                 </div>
               </div>
@@ -93,13 +110,14 @@ export function ScoreboardDisplay() {
               <div className="text-[clamp(0.625rem,1.5vw,0.75rem)] text-white mb-1 sm:mb-2 uppercase font-bold">Shot Clock</div>
               <div className={`border-2 border-white bg-black px-2 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-3 mb-1 sm:mb-2 w-full max-w-[420px] ${!state.shotClockEnabled ? 'opacity-50' : ''}`}>
                 <div
-                  className={`text-[clamp(2rem,6vw,5.5rem)] font-black clock-font text-center leading-none ${
-                    state.shotClockEnabled
-                      ? isShotClockWarning
-                        ? 'text-red-500'
-                        : 'text-yellow-500'
-                      : 'text-gray-500'
-                  }`}
+                  className="text-[clamp(2rem,6vw,5.5rem)] font-black clock-font text-center leading-none"
+                  style={{
+                    color: !state.shotClockEnabled
+                      ? SHOT_CLOCK_DISABLED_HEX
+                      : isShotClockWarning
+                        ? SHOT_CLOCK_WARNING_HEX
+                        : customization.shotClockTextColor,
+                  }}
                 >
                   {state.shotClockEnabled ? formatShotClock() : '--'}
                 </div>
@@ -137,7 +155,10 @@ export function ScoreboardDisplay() {
                 {state.away.name}
               </div>
               <div className="border-2 border-white bg-black px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-3 mb-2 sm:mb-3 md:mb-4 w-full">
-                <div className="text-[clamp(2.5rem,8vw,8rem)] font-black clock-font text-red-500 text-center leading-none">
+                <div
+                  className="text-[clamp(2.5rem,8vw,8rem)] font-black clock-font text-center leading-none"
+                  style={{ color: customization.awayScoreTextColor }}
+                >
                   {state.away.score}
                 </div>
               </div>
@@ -147,7 +168,10 @@ export function ScoreboardDisplay() {
                 FOULS
               </div>
               <div className="flex w-full justify-center items-center">
-                <div className="bg-black border-2 border-white text-orange-500 text-[clamp(1.25rem,3vw,1.5rem)] font-black clock-font px-2 sm:px-3 md:px-4 py-0.5 sm:py-1 md:py-2 min-w-[clamp(2.5rem,6vw,3.75rem)] text-center">
+                <div
+                  className="bg-black border-2 border-white text-[clamp(1.25rem,3vw,1.5rem)] font-black clock-font px-2 sm:px-3 md:px-4 py-0.5 sm:py-1 md:py-2 min-w-[clamp(2.5rem,6vw,3.75rem)] text-center"
+                  style={{ color: customization.awayFoulsTextColor }}
+                >
                   {state.away.fouls}
                 </div>
               </div>

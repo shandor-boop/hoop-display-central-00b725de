@@ -18,6 +18,15 @@ export function hexToRgbaCss(hex: string, alpha: number) {
   return `rgba(${rgb.r},${rgb.g},${rgb.b},${a})`;
 }
 
+/** Normalize user-entered hex; invalid input returns `fallback`. */
+export function normalizeHexColor(input: string, fallback: string) {
+  const raw = input?.trim();
+  if (!raw) return fallback;
+  const withHash = raw.startsWith("#") ? raw : `#${raw}`;
+  if (hexToRgb(withHash)) return withHash.toLowerCase();
+  return fallback;
+}
+
 // Relative luminance per WCAG (sRGB)
 function srgbToLinear(c: number) {
   const v = c / 255;
